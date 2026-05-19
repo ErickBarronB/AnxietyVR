@@ -951,7 +951,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VisualFixationSystem
   vrCamera: {fileID: 0}
-  anxietySystem: {fileID: 0}
+  anxietySystem: {fileID: 1018192895}
   npcPool: {fileID: 358323601}
   npcLayer:
     serializedVersion: 2
@@ -1191,7 +1191,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MinigameSpawner
   targetPrefab: {fileID: 6977393323962452932, guid: 8534be205758d23448ff7e33047424f5,
     type: 3}
-  player: {fileID: 0}
+  player: {fileID: 1018192894}
   spawnDistance: 2.5
   spawnInterval: 0.8
   maxTargetsToSpawn: 15
@@ -1640,6 +1640,31 @@ PrefabInstance:
       propertyPath: anxietyText
       value: 
       objectReference: {fileID: 1018192893}
+    - target: {fileID: 8594565333794097153, guid: cb6a5e5cf51ce3142ac301f62c94097d,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 8594565333794097153, guid: cb6a5e5cf51ce3142ac301f62c94097d,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8594565333794097153, guid: cb6a5e5cf51ce3142ac301f62c94097d,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 8594565333794097153, guid: cb6a5e5cf51ce3142ac301f62c94097d,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8594565333794097153, guid: cb6a5e5cf51ce3142ac301f62c94097d,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -90
+      objectReference: {fileID: 0}
     - target: {fileID: 9047092214362766349, guid: cb6a5e5cf51ce3142ac301f62c94097d,
         type: 3}
       propertyPath: m_Name
@@ -1660,6 +1685,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1018192894 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1465737110440564057, guid: cb6a5e5cf51ce3142ac301f62c94097d,
+    type: 3}
+  m_PrefabInstance: {fileID: 1018192892}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1018192895 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7292170787798127150, guid: cb6a5e5cf51ce3142ac301f62c94097d,
+    type: 3}
+  m_PrefabInstance: {fileID: 1018192892}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71fb6a195474a5644aef5a6a6ded3c23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1024093763
@@ -2425,7 +2468,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Event_Manager
   Player: {fileID: 0}
-  AnxietySystem: {fileID: 0}
+  AnxietySystem: {fileID: 1018192895}
 --- !u!4 &1591879939
 Transform:
   m_ObjectHideFlags: 0

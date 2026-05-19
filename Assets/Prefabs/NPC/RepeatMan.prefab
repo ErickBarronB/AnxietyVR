@@ -144,7 +144,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 807996c2c4a4dcf47a525c1f0fed26dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  npcType: RepeatMan
+  npcType: Default10
 --- !u!65 &9086689074676598865
 BoxCollider:
   m_ObjectHideFlags: 0
