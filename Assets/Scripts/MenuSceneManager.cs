@@ -32,18 +32,20 @@ public class MenuSceneManager : MonoBehaviour
     }
 
     private IEnumerator WaitForDialogueThenLoad()
-{
-    float readingDelay = WorldSpaceDialogueSystem.Instance.readingDelay;
-
-    float totalTime = 0f;
-    foreach (DialogueLine line in dialogueLines)
     {
-        totalTime += line.line.Length * line.typingSpeed + readingDelay;
+        float readingDelay = WorldSpaceDialogueSystem.Instance.readingDelay;
+
+        float totalTime = 0f;
+        foreach (DialogueLine line in dialogueLines)
+        {
+            totalTime += line.line.Length * line.typingSpeed + readingDelay;
+        }
+
+        yield return new WaitForSeconds(totalTime + delayAfterDialogue);
+
+        yield return FadeManager.Instance.FadeOut();
+
+        SceneManager.LoadScene(sceneName);
     }
-
-    yield return new WaitForSeconds(totalTime + delayAfterDialogue);
-
-    SceneManager.LoadScene(sceneName);
-}
 
 }
