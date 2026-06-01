@@ -765,7 +765,7 @@ MonoBehaviour:
   audioSource: {fileID: 262173183}
   laughingClip: {fileID: 8300000, guid: 43fa9b599a7fea94ba125125d5b6727f, type: 3}
   thoughtClip: {fileID: 8300000, guid: 00bff6e65d77ee34fa5713796ff92cbb, type: 3}
-  triggerAmount: 50
+  triggerAmount: 1
   triggerOnlyOnce: 1
 --- !u!65 &262173185
 BoxCollider:
@@ -4141,11 +4141,11 @@ MonoBehaviour:
   renderIntervalFrameOffset: 0
   superSample: 0
   layer: 5
-  opacity: 1
+  opacity: 2
   shape: 0
   curveRadius: 1
   overlapMask: 0
-  compositionMode: 2
+  compositionMode: 1
   _overlayEnabled: 1
 --- !u!114 &1676737338
 MonoBehaviour:
@@ -4588,6 +4588,8 @@ MonoBehaviour:
   wordDuration: 2
   minWordsPerWaypoint: 3
   requireContactToCycle: 1
+  anxiety: {fileID: 1018192895}
+  calmDuration: 15
 --- !u!114 &1834278911
 MonoBehaviour:
   m_ObjectHideFlags: 0

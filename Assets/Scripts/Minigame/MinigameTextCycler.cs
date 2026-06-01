@@ -19,6 +19,9 @@ namespace Minigame
         [SerializeField] private int minWordsPerWaypoint = 3;
         [SerializeField] private bool requireContactToCycle = true;
 
+        [SerializeField] private System_PlayerAnxiety anxiety;
+        [SerializeField] private float calmDuration = 7f;
+
         private int currentWordIndex = -1;
         private int wordsShownThisWaypoint = 0;
         private float timer = 0f;
@@ -96,6 +99,11 @@ namespace Minigame
         {
             isCompleted = true;
             ShowWord(completionText);
+
+            if (anxiety != null)
+            {
+                anxiety.TriggerCalm(calmDuration);
+            }
         }
 
         private void ShowNextWord()
