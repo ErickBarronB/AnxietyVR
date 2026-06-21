@@ -7,9 +7,6 @@ namespace Minigame
 {
     public class PMRMinigame : MonoBehaviour
     {
-        // ──────────────────────────────────────────────────────────────
-        //  Estados internos
-        // ──────────────────────────────────────────────────────────────
         private enum PMRState
         {
             Idle,
@@ -22,9 +19,6 @@ namespace Minigame
             Complete
         }
 
-        // ──────────────────────────────────────────────────────────────
-        //  Inspector
-        // ──────────────────────────────────────────────────────────────
         [Header("Input VR (gatillos Meta XR)")]
         [Tooltip("Valor mínimo del grip para considerar que está apretado (0-1)")]
         [SerializeField] private float gripThreshold = 0.7f;
@@ -42,7 +36,6 @@ namespace Minigame
         [Header("UI Diegética")]
         [SerializeField] private TMP_Text instructionText;
         [SerializeField] private TMP_Text timerText;
-        [SerializeField] private TMP_Text pulseText;
         [SerializeField] private TMP_Text roundText;
         [Tooltip("Panel raíz de la UI diegética (para activar/desactivar)")]
         [SerializeField] private GameObject uiPanel;
@@ -55,30 +48,20 @@ namespace Minigame
         public UnityEvent onRoundCompleted;
         public UnityEvent onMinigameCompleted;
 
-        // ──────────────────────────────────────────────────────────────
-        //  Estado privado
-        // ──────────────────────────────────────────────────────────────
         private PMRState state = PMRState.Idle;
         private int currentRound = 0;
         private float stateTimer = 0f;
         private bool bothGripsHeld = false;
 
-        private System_PlayerAnxiety anxietySystem;
+        [Header("Sistema de Ansiedad - Referencia")]
+        [SerializeField] private System_PlayerAnxiety anxietySystem;
         private Coroutine activeCoroutine;
 
-        // ──────────────────────────────────────────────────────────────
-        //  Unity lifecycle
-        // ──────────────────────────────────────────────────────────────
         private void Awake()
         {
-            anxietySystem = FindObjectOfType<System_PlayerAnxiety>();
+            if (anxietySystem == null)
+                anxietySystem = FindObjectOfType<System_PlayerAnxiety>();
         }
-
-        //private void Start()
-        //{
-        //    SetUIActive(false);
-        //    if (startOnStart) StartMinigame();
-        //}
 
         private void Update()
         {
@@ -87,13 +70,9 @@ namespace Minigame
 
             bothGripsHeld = ReadGrips();
 
-            UpdatePulseUI();
             HandleState();
         }
 
-        // ──────────────────────────────────────────────────────────────
-        //  API pública
-        // ──────────────────────────────────────────────────────────────
         public void StartMinigame()
         {
             if (state != PMRState.Idle && state != PMRState.Complete) return;
@@ -113,9 +92,6 @@ namespace Minigame
             SetUIActive(false);
         }
 
-        // ──────────────────────────────────────────────────────────────
-        //  Secuencia de estados
-        // ──────────────────────────────────────────────────────────────
         private IEnumerator IntroSequence()
         {
             SetState(PMRState.Intro);
@@ -143,7 +119,6 @@ namespace Minigame
             switch (state)
             {
                 case PMRState.TensePrompt:
-                    // Esperar a que el jugador apriete ambos gatillos
                     if (bothGripsHeld)
                     {
                         SetState(PMRState.Tensing);
@@ -156,7 +131,6 @@ namespace Minigame
                     float tensionLeft = tenseHoldDuration - stateTimer;
                     SetTimerText(FormatTimer(tensionLeft));
 
-                    // Si suelta antes de tiempo, volver a TensePrompt
                     if (!bothGripsHeld)
                     {
                         SetInstruction("Seguí apretando\nlos dos gatillos.");
@@ -175,7 +149,6 @@ namespace Minigame
                     break;
 
                 case PMRState.ReleasePrompt:
-                    // Esperar a que el jugador suelte
                     if (!bothGripsHeld)
                     {
                         SetState(PMRState.Releasing);
@@ -243,17 +216,6 @@ namespace Minigame
             SetUIActive(false);
         }
 
-        // ──────────────────────────────────────────────────────────────
-        //  Helpers de UI
-        // ──────────────────────────────────────────────────────────────
-        private void UpdatePulseUI()
-        {
-            if (pulseText == null || anxietySystem == null) return;
-            // Convertir ansiedad (60-180) a BPM aproximado (60-110) para ser más intuitivo
-            float bpm = Mathf.RoundToInt(Mathf.Lerp(60f, 110f, anxietySystem.GetAnxiety() / 180f));
-            pulseText.text = $"♥ {bpm} BPM";
-        }
-
         private void SetInstruction(string text)
         {
             if (instructionText != null) instructionText.text = text;
@@ -280,27 +242,20 @@ namespace Minigame
             return $"{Mathf.CeilToInt(seconds)}s";
         }
 
-        // ──────────────────────────────────────────────────────────────
-        //  Input — Meta XR SDK (OVRInput)
-        // ──────────────────────────────────────────────────────────────
         private bool ReadGrips()
         {
-            float left  = OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger,  OVRInput.Controller.LTouch);
-            float right = OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, OVRInput.Controller.RTouch);
-            return left >= gripThreshold && right >= gripThreshold;
+            bool leftHeld  = OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger,  OVRInput.Controller.LTouch) >= gripThreshold
+                          && OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, OVRInput.Controller.LTouch) >= gripThreshold;
+            bool rightHeld = OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger,  OVRInput.Controller.RTouch) >= gripThreshold
+                          && OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, OVRInput.Controller.RTouch) >= gripThreshold;
+            return leftHeld && rightHeld;
         }
 
-        // ──────────────────────────────────────────────────────────────
-        //  Estado
-        // ──────────────────────────────────────────────────────────────
         private void SetState(PMRState newState)
         {
             state = newState;
         }
 
-        // ──────────────────────────────────────────────────────────────
-        //  Properties públicas (por si otros scripts necesitan consultar)
-        // ──────────────────────────────────────────────────────────────
         public bool IsActive => state != PMRState.Idle && state != PMRState.Complete;
         public int CurrentRound => currentRound;
         public int TotalRounds => totalRounds;
