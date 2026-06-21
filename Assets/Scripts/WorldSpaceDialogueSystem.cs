@@ -32,6 +32,7 @@ public class WorldSpaceDialogueSystem : MonoBehaviour
     private List<DialogueLine> currentLines;
     private int currentLineIndex = 0;
     private bool isTyping = false;
+    private Vector3 targetPosition;
 
     private void Awake()
     {
@@ -61,7 +62,7 @@ public class WorldSpaceDialogueSystem : MonoBehaviour
 
         dialogueObject.transform.SetParent(transform);
         dialogueTextComponent.fontMaterial = new Material(dialogueTextComponent.fontMaterial);
-        dialogueTextComponent.fontMaterial.shader = Shader.Find("TextMeshPro/Distance Field Overlay");
+        //dialogueTextComponent.fontMaterial.shader = Shader.Find("TextMeshPro/Distance Field Overlay");
         SetRenderActive(false);
     }
 
@@ -84,23 +85,25 @@ public class WorldSpaceDialogueSystem : MonoBehaviour
     }
 
     // --- DialogueLine overloads ---
-public void PlayDialogue(List<DialogueLine> linesToDisplay, Vector3 position)
-{
-    if (linesToDisplay == null || linesToDisplay.Count == 0) return;
+    public void PlayDialogue(List<DialogueLine> linesToDisplay, Vector3 position)
+    {
+        if (linesToDisplay == null || linesToDisplay.Count == 0) return;
 
-    if (typingCoroutine != null) StopCoroutine(typingCoroutine);
+        if (typingCoroutine != null) StopCoroutine(typingCoroutine);
 
-    // Reset parent before positioning so world position is always correct
-    dialogueObject.transform.SetParent(transform);
-    dialogueObject.transform.position = position;
-    SetRenderActive(true);
+        // Reset parent before positioning so world position is always correct
+        targetPosition = position;
 
-    currentLines = linesToDisplay;
-    currentLineIndex = 0;
-    isTyping = false;
+        dialogueObject.transform.SetParent(transform);
+        dialogueObject.transform.position = position;
+        SetRenderActive(true);
 
-    ShowNextLine();
-}
+        currentLines = linesToDisplay;
+        currentLineIndex = 0;
+        isTyping = false;
+
+        ShowNextLine();
+    }
     public void PlayDialogue(List<DialogueLine> linesToDisplay, Vector3 position, float fontSize)
     {
         dialogueTextComponent.fontSize = fontSize;
@@ -151,9 +154,35 @@ public void PlayDialogue(List<DialogueLine> linesToDisplay, Vector3 position)
     {
         if (dialogueTextComponent != null && dialogueTextComponent.enabled)
         {
-            Camera mainCamera = Camera.main;
-            if (mainCamera != null)
-                dialogueObject.transform.rotation = Quaternion.LookRotation(dialogueObject.transform.position - mainCamera.transform.position);
+            Camera cam = Camera.main;
+            if (cam != null)
+            {
+                // Mirar a la cámara
+                dialogueObject.transform.rotation =
+                    Quaternion.LookRotation(dialogueObject.transform.position - cam.transform.position);
+
+                // Si hay una pared entre la cámara y el texto...
+                Vector3 dir = targetPosition - cam.transform.position;
+
+                if (Physics.Raycast(cam.transform.position, dir.normalized,
+                    out RaycastHit hit, dir.magnitude))
+                {
+                    // Si algo tapa el texto
+                    if (hit.distance < dir.magnitude - 0.05f)
+                    {
+                        dialogueObject.transform.position =
+                            cam.transform.position + dir.normalized * Mathf.Max(hit.distance - 0.2f, 0.5f);
+                    }
+                    else
+                    {
+                        dialogueObject.transform.position = targetPosition;
+                    }
+                }
+                else
+                {
+                    dialogueObject.transform.position = targetPosition;
+                }
+            }
         }
     }
 
