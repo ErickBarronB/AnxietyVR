@@ -112,8 +112,6 @@ namespace Minigame
         {
             if (!minigameActive || balloon == null) return;
 
-            UpdateAxisLocksBasedOnSpikes();
-
             Vector3 currentPos = balloon.transform.position;
 
             if (lockXAxis && !prevLockX) lockedPosition.x = currentPos.x;
