@@ -154,7 +154,7 @@ MonoBehaviour:
   textPrefab: {fileID: 0}
   typingSpeed: 0.05
   readingDelay: 2
-  defaultFontSize: 0.3
+  defaultFontSize: 1
 --- !u!4 &264465797
 Transform:
   m_ObjectHideFlags: 0

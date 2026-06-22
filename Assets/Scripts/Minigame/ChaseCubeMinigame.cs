@@ -42,6 +42,7 @@ namespace Minigame
         private int currentWaypointIndex = 0;
         private Vector3 lockedPosition;
         private float lastResetTime = -1f;
+        private Quaternion balloonInitialRotation;
 
         private bool prevLockX = false;
         private bool prevLockY = false;
@@ -53,7 +54,15 @@ namespace Minigame
         private void Start()
         {
             anxietySystem = FindObjectOfType<System_PlayerAnxiety>();
-            
+
+            if (balloon != null)
+            {
+                balloonInitialRotation = balloon.transform.rotation;
+                Rigidbody rb = balloon.GetComponent<Rigidbody>();
+                if (rb != null)
+                    rb.constraints = RigidbodyConstraints.FreezeRotation;
+            }
+
             Transform startTransform = spawnPoint != null ? spawnPoint : (waypoints != null && waypoints.Length > 0 ? waypoints[0] : null);
             if (startTransform != null)
             {
@@ -197,7 +206,7 @@ namespace Minigame
                 }
 
                 balloon.transform.position = startTransform.position;
-                balloon.transform.rotation = startTransform.rotation;
+                balloon.transform.rotation = balloonInitialRotation;
                 lockedPosition = startTransform.position;
 
                 prevLockX = false;
@@ -249,7 +258,7 @@ namespace Minigame
                 }
 
                 balloon.transform.position = startTransform.position;
-                balloon.transform.rotation = startTransform.rotation;
+                balloon.transform.rotation = balloonInitialRotation;
                 lockedPosition = startTransform.position;
 
                 prevLockX = false;
