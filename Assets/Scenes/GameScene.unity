@@ -5654,7 +5654,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbd043429dd6ac547b8b324b1b515a0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minigame: {fileID: 0}
+  minigame: {fileID: 1834278912}
   uiText: {fileID: 403261498}
   words:
   - calmate pa
