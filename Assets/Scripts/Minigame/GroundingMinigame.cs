@@ -38,10 +38,10 @@ public class GroundingMinigame : MonoBehaviour
     public UnityEvent onMinigameFailed;
     public UnityEvent onMinigameCompleted;
 
-    private const int TotalObjects = 15;
     private bool active;
     private int correctCount;
     private int processedCount;
+    private int totalObjects;
     private readonly List<GroundingObject> activeObjects = new List<GroundingObject>();
 
     public bool IsActive => active;
@@ -67,6 +67,7 @@ public class GroundingMinigame : MonoBehaviour
         gustoBox.Init(this);
 
         var queue = BuildSpawnQueue();
+        totalObjects = queue.Count;
         SpawnAllObjects(queue);
 
         active = true;
@@ -96,7 +97,7 @@ public class GroundingMinigame : MonoBehaviour
 
     private void CheckEnd()
     {
-        if (!active || processedCount < TotalObjects) return;
+        if (!active || processedCount < totalObjects) return;
 
         active = false;
 
@@ -106,7 +107,7 @@ public class GroundingMinigame : MonoBehaviour
             if (obj != null) Destroy(obj.gameObject);
         activeObjects.Clear();
 
-        if (correctCount >= TotalObjects)
+        if (correctCount >= totalObjects)
         {
             anxietySystem?.RemoveAnxiety(anxietyReductionOnComplete);
             onMinigameCompleted?.Invoke();
@@ -132,7 +133,7 @@ public class GroundingMinigame : MonoBehaviour
 
         // Grid 5 columnas x 3 filas
         const int cols = 5;
-        for (int i = 0; i < queue.Count && i < TotalObjects; i++)
+        for (int i = 0; i < queue.Count; i++)
         {
             int col = i % cols;
             int row = i / cols;
@@ -159,11 +160,11 @@ public class GroundingMinigame : MonoBehaviour
     private List<(GameObject, SensoryCategory)> BuildSpawnQueue()
     {
         var list = new List<(GameObject, SensoryCategory)>();
-        AddObjects(list, vistaPrefabs,  SensoryCategory.Vista,   5);
-        AddObjects(list, tactoPrefabs,  SensoryCategory.Tacto,   4);
-        AddObjects(list, oidoPrefabs,   SensoryCategory.Oido,    3);
-        AddObjects(list, olfatoPrefabs, SensoryCategory.Olfato,  2);
-        AddObjects(list, gustoPrefabs,  SensoryCategory.Gusto,   1);
+        AddObjects(list, vistaPrefabs,  SensoryCategory.Vista);
+        AddObjects(list, tactoPrefabs,  SensoryCategory.Tacto);
+        AddObjects(list, oidoPrefabs,   SensoryCategory.Oido);
+        AddObjects(list, olfatoPrefabs, SensoryCategory.Olfato);
+        AddObjects(list, gustoPrefabs,  SensoryCategory.Gusto);
 
         for (int i = list.Count - 1; i > 0; i--)
         {
@@ -173,10 +174,10 @@ public class GroundingMinigame : MonoBehaviour
         return list;
     }
 
-    private void AddObjects(List<(GameObject, SensoryCategory)> list, GameObject[] prefabs, SensoryCategory cat, int count)
+    private void AddObjects(List<(GameObject, SensoryCategory)> list, GameObject[] prefabs, SensoryCategory cat)
     {
-        if (prefabs == null || prefabs.Length == 0) return;
-        for (int i = 0; i < count; i++)
-            list.Add((prefabs[i % prefabs.Length], cat));
+        if (prefabs == null) return;
+        foreach (var prefab in prefabs)
+            if (prefab != null) list.Add((prefab, cat));
     }
 }

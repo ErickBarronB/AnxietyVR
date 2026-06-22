@@ -162,6 +162,8 @@ public class System_PlayerAnxiety : MonoBehaviour, IAnxietySystem
     }
 
     public float GetAnxiety() => anxiety;
+    public float GetMaxAnxiety() => maxAnxiety;
+    public float GetMinAnxiety() => minAnxiety;
     public bool GetIsAnxious() => IsAnxious();
     public Enum_AnxietyLevel GetAnxietyLevel() => currentLevel;
     public bool GetIsIncreasing()

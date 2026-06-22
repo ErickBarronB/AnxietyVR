@@ -10,6 +10,9 @@ public class AnxietyEvent_LaughingPeople : MonoBehaviour
     [SerializeField] private AudioClip laughingClip;
     [SerializeField] private AudioClip thoughtClip;
 
+    [Header("Minigame")]
+    [SerializeField] private GameObject miniGame;
+
     [Header("Ansiedad")]
     [SerializeField] private float anxietyRatePerSecond = 5f;
     [SerializeField] private float maxAnxietyGain = 50f;
@@ -28,6 +31,8 @@ public class AnxietyEvent_LaughingPeople : MonoBehaviour
         triggered = true;
 
         StartCoroutine(EventRoutine());
+
+        miniGame.SetActive(true);
     }
 
     private IEnumerator EventRoutine()
