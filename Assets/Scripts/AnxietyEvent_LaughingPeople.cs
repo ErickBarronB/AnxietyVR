@@ -10,7 +10,7 @@ public class AnxietyEvent_LaughingPeople : MonoBehaviour
     [SerializeField] private AudioClip laughingClip;
     [SerializeField] private AudioClip thoughtClip;
 
-    [SerializeField] private int triggerAmount = 50;
+    [SerializeField] private int triggerAmount = 1;
     [SerializeField] private bool triggerOnlyOnce = true;
 
     private bool triggered;
@@ -39,5 +39,7 @@ public class AnxietyEvent_LaughingPeople : MonoBehaviour
         audioSource.PlayOneShot(thoughtClip);
 
         yield return new WaitForSeconds(thoughtClip.length);
+
+        anxiety.RemoveAnxietyTrigger(triggerAmount);
     }
 }
