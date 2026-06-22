@@ -59,7 +59,14 @@ namespace Minigame
         public int CurrentLap => currentLap;
         public int LapsRequired => lapsRequired;
         public float SegmentTimer => segmentTimer;
-        public int CurrentSegmentIndex => Mathf.Max(0, currentWaypointIndex - 1);
+        public int CurrentSegmentIndex
+        {
+            get
+            {
+                if (waypoints == null || waypoints.Length == 0) return 0;
+                return (currentWaypointIndex - 1 + waypoints.Length) % waypoints.Length;
+            }
+        }
 
         private void Start()
         {
@@ -165,7 +172,7 @@ namespace Minigame
 
         private void CheckBalloonWaypointProximity()
         {
-            if (balloon == null || waypoints == null || currentWaypointIndex >= waypoints.Length) return;
+            if (balloon == null || waypoints == null || waypoints.Length == 0) return;
 
             Transform target = waypoints[currentWaypointIndex];
             if (target == null) return;
@@ -173,11 +180,13 @@ namespace Minigame
             if (Vector3.Distance(balloon.transform.position, target.position) < waypointThreshold)
             {
                 int reached = currentWaypointIndex;
-                currentWaypointIndex++;
+                bool wasLastWaypoint = reached == waypoints.Length - 1;
+
                 segmentTimer = 0f;
+                currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Length;
                 onWaypointReached?.Invoke(reached);
 
-                if (currentWaypointIndex >= waypoints.Length)
+                if (wasLastWaypoint)
                     HandleLapCompleted();
             }
         }
@@ -189,8 +198,6 @@ namespace Minigame
 
             if (currentLap >= lapsRequired)
                 CompleteMinigame();
-            else
-                ResetPositions();
         }
 
         private void ResetPositions()

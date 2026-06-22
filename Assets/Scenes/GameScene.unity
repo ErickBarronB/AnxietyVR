@@ -1243,6 +1243,7 @@ GameObject:
   - component: {fileID: 268767880}
   - component: {fileID: 268767879}
   - component: {fileID: 268767878}
+  - component: {fileID: 268767885}
   m_Layer: 7
   m_Name: '[BuildingBlock]Ballon'
   m_TagString: Balloon
@@ -1406,6 +1407,20 @@ Transform:
   - {fileID: 33971539}
   m_Father: {fileID: 1834278906}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+--- !u!114 &268767885
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 268767877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5fb57844ea10694caf99a479ddc7cdb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  popSound: {fileID: 8300000, guid: 409da1a4ca04f334dac89890e6b5242c, type: 3}
+  popVolume: 1
 --- !u!1 &277570511
 GameObject:
   m_ObjectHideFlags: 0

@@ -7,10 +7,15 @@ namespace Minigame
     {
         public Action OnHitSpike;
 
+        [Header("Sonido de Explosión")]
+        [SerializeField] private AudioClip popSound;
+        [SerializeField] [Range(0f, 1f)] private float popVolume = 1f;
+
         private void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("Spike") || other.GetComponent<SpikeWaypointMover>() != null)
             {
+                PlayPopSound();
                 OnHitSpike?.Invoke();
             }
         }
@@ -19,8 +24,15 @@ namespace Minigame
         {
             if (collision.collider.CompareTag("Spike") || collision.collider.GetComponent<SpikeWaypointMover>() != null)
             {
+                PlayPopSound();
                 OnHitSpike?.Invoke();
             }
+        }
+
+        private void PlayPopSound()
+        {
+            if (popSound != null)
+                AudioSource.PlayClipAtPoint(popSound, transform.position, popVolume);
         }
     }
 }
