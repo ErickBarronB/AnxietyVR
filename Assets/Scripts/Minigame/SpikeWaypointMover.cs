@@ -12,6 +12,10 @@ namespace Minigame
         [SerializeField] private int startWaypointIndex = 0;
         [SerializeField] private bool startOnStart = true;
 
+        [Header("Movimiento Temporal (4 seg por tramo)")]
+        [SerializeField] private bool useTimeBased = false;
+        [SerializeField] private float segmentDuration = 4f;
+
         [Header("Colisión con el Globo")]
         [SerializeField] private string balloonTag = "Balloon";
         public UnityEvent onHitBalloon;
@@ -19,6 +23,8 @@ namespace Minigame
         private int currentIndex;
         private bool active;
         private Rigidbody rb;
+        private float segmentElapsed = 0f;
+        private Vector3 segmentStartPos;
 
         private void Awake()
         {
@@ -40,11 +46,27 @@ namespace Minigame
             Transform target = waypoints[currentIndex];
             if (target == null) return;
 
-            Vector3 newPos = Vector3.MoveTowards(rb.position, target.position, speed * Time.fixedDeltaTime);
-            rb.MovePosition(newPos);
+            if (useTimeBased)
+            {
+                segmentElapsed += Time.fixedDeltaTime;
+                float t = Mathf.Clamp01(segmentElapsed / segmentDuration);
+                rb.MovePosition(Vector3.Lerp(segmentStartPos, target.position, t));
 
-            if (Vector3.Distance(rb.position, target.position) < waypointThreshold)
-                currentIndex = (currentIndex + 1) % waypoints.Length;
+                if (t >= 1f)
+                {
+                    segmentStartPos = target.position;
+                    segmentElapsed = 0f;
+                    currentIndex = (currentIndex + 1) % waypoints.Length;
+                }
+            }
+            else
+            {
+                Vector3 newPos = Vector3.MoveTowards(rb.position, target.position, speed * Time.fixedDeltaTime);
+                rb.MovePosition(newPos);
+
+                if (Vector3.Distance(rb.position, target.position) < waypointThreshold)
+                    currentIndex = (currentIndex + 1) % waypoints.Length;
+            }
         }
 
         public void StartMoving()
@@ -58,6 +80,8 @@ namespace Minigame
             startWaypointIndex = Mathf.Clamp(startWaypointIndex, 0, waypoints.Length - 1);
             rb.position = waypoints[startWaypointIndex].position;
             currentIndex = (startWaypointIndex + 1) % waypoints.Length;
+            segmentStartPos = waypoints[startWaypointIndex].position;
+            segmentElapsed = 0f;
             active = true;
         }
 
@@ -76,9 +100,7 @@ namespace Minigame
             int nextIndex = currentIndex;
             int prevIndex = (currentIndex - 1 + waypoints.Length) % waypoints.Length;
             if (waypoints[nextIndex] != null && waypoints[prevIndex] != null)
-            {
                 return (waypoints[nextIndex].position - waypoints[prevIndex].position).normalized;
-            }
             return (waypoints[1].position - waypoints[0].position).normalized;
         }
 

@@ -29,6 +29,9 @@ namespace Minigame
         [Header("Sistema de Ansiedad")]
         [SerializeField] private float anxietyReductionAmount = 30f;
 
+        [Header("Sistema de Vueltas")]
+        [SerializeField] private int lapsRequired = 4;
+
         [Header("Bucle y Flujo de Juego")]
         [SerializeField] private bool startOnStart = false;
 
@@ -36,10 +39,13 @@ namespace Minigame
         public UnityEvent onMinigameStarted;
         public UnityEvent onMinigameCompleted;
         public WaypointReachedEvent onWaypointReached;
+        public WaypointReachedEvent onLapCompleted;
 
         private System_PlayerAnxiety anxietySystem;
         private bool minigameActive = false;
         private int currentWaypointIndex = 0;
+        private int currentLap = 0;
+        private float segmentTimer = 0f;
         private Vector3 lockedPosition;
         private float lastResetTime = -1f;
         private Quaternion balloonInitialRotation;
@@ -50,6 +56,10 @@ namespace Minigame
 
         public bool IsMinigameActive => minigameActive;
         public int CurrentWaypointIndex => currentWaypointIndex;
+        public int CurrentLap => currentLap;
+        public int LapsRequired => lapsRequired;
+        public float SegmentTimer => segmentTimer;
+        public int CurrentSegmentIndex => Mathf.Max(0, currentWaypointIndex - 1);
 
         private void Start()
         {
@@ -65,30 +75,20 @@ namespace Minigame
 
             Transform startTransform = spawnPoint != null ? spawnPoint : (waypoints != null && waypoints.Length > 0 ? waypoints[0] : null);
             if (startTransform != null)
-            {
                 lockedPosition = startTransform.position;
-            }
 
             if (balloon != null)
             {
                 var detector = balloon.GetComponent<BalloonCollisionDetector>();
                 if (detector == null)
-                {
                     detector = balloon.AddComponent<BalloonCollisionDetector>();
-                }
                 detector.OnHitSpike = ResetBalloon;
             }
 
             if (spikes != null)
-            {
                 foreach (var spike in spikes)
-                {
                     if (spike != null)
-                    {
                         spike.onHitBalloon.AddListener(ResetBalloon);
-                    }
-                }
-            }
 
             if (startOnStart)
                 StartMinigame();
@@ -97,6 +97,7 @@ namespace Minigame
         private void Update()
         {
             if (!minigameActive) return;
+            segmentTimer += Time.deltaTime;
             CheckBalloonWaypointProximity();
         }
 
@@ -107,7 +108,7 @@ namespace Minigame
             UpdateAxisLocksBasedOnSpikes();
 
             Vector3 currentPos = balloon.transform.position;
-            
+
             if (lockXAxis && !prevLockX) lockedPosition.x = currentPos.x;
             if (lockYAxis && !prevLockY) lockedPosition.y = currentPos.y;
             if (lockZAxis && !prevLockZ) lockedPosition.z = currentPos.z;
@@ -164,20 +165,68 @@ namespace Minigame
 
         private void CheckBalloonWaypointProximity()
         {
-            if (balloon == null) return;
-            if (waypoints == null || currentWaypointIndex >= waypoints.Length) return;
+            if (balloon == null || waypoints == null || currentWaypointIndex >= waypoints.Length) return;
 
             Transform target = waypoints[currentWaypointIndex];
             if (target == null) return;
 
             if (Vector3.Distance(balloon.transform.position, target.position) < waypointThreshold)
             {
-                onWaypointReached?.Invoke(currentWaypointIndex);
+                int reached = currentWaypointIndex;
                 currentWaypointIndex++;
+                segmentTimer = 0f;
+                onWaypointReached?.Invoke(reached);
 
                 if (currentWaypointIndex >= waypoints.Length)
-                    CompleteMinigame();
+                    HandleLapCompleted();
             }
+        }
+
+        private void HandleLapCompleted()
+        {
+            currentLap++;
+            onLapCompleted?.Invoke(currentLap);
+
+            if (currentLap >= lapsRequired)
+                CompleteMinigame();
+            else
+                ResetPositions();
+        }
+
+        private void ResetPositions()
+        {
+            currentWaypointIndex = 1;
+            segmentTimer = 0f;
+            lastResetTime = Time.time;
+
+            if (balloon != null)
+            {
+                Transform startTransform = spawnPoint != null ? spawnPoint : waypoints[0];
+
+                balloon.SetActive(false);
+
+                Rigidbody rb = balloon.GetComponent<Rigidbody>();
+                if (rb != null)
+                {
+                    rb.velocity = Vector3.zero;
+                    rb.angularVelocity = Vector3.zero;
+                    rb.position = startTransform.position;
+                }
+
+                balloon.transform.position = startTransform.position;
+                balloon.transform.rotation = balloonInitialRotation;
+                lockedPosition = startTransform.position;
+
+                prevLockX = false;
+                prevLockY = false;
+                prevLockZ = false;
+
+                balloon.SetActive(true);
+            }
+
+            if (spikes != null)
+                foreach (var spike in spikes)
+                    if (spike != null) spike.StartMoving();
         }
 
         public void StartMinigame()
@@ -188,39 +237,11 @@ namespace Minigame
                 return;
             }
 
+            currentLap = 0;
             minigameActive = true;
-            currentWaypointIndex = 1;
 
-            if (balloon != null)
-            {
-                Transform startTransform = spawnPoint != null ? spawnPoint : waypoints[0];
-                
-                balloon.SetActive(false);
-
-                Rigidbody rb = balloon.GetComponent<Rigidbody>();
-                if (rb != null)
-                {
-                    rb.velocity = Vector3.zero;
-                    rb.angularVelocity = Vector3.zero;
-                    rb.position = startTransform.position;
-                }
-
-                balloon.transform.position = startTransform.position;
-                balloon.transform.rotation = balloonInitialRotation;
-                lockedPosition = startTransform.position;
-
-                prevLockX = false;
-                prevLockY = false;
-                prevLockZ = false;
-
-                balloon.SetActive(true);
-            }
-
+            ResetPositions();
             gameObject.SetActive(true);
-
-            if (spikes != null)
-                foreach (var spike in spikes)
-                    spike?.StartMoving();
 
             onMinigameStarted?.Invoke();
         }
@@ -231,53 +252,15 @@ namespace Minigame
 
             if (spikes != null)
                 foreach (var spike in spikes)
-                    spike?.StopMoving();
+                    if (spike != null) spike.StopMoving();
         }
 
         public void ResetBalloon()
         {
             if (!minigameActive) return;
-
             if (Time.time - lastResetTime < 0.1f) return;
-            lastResetTime = Time.time;
 
-            currentWaypointIndex = 1;
-
-            if (balloon != null)
-            {
-                Transform startTransform = spawnPoint != null ? spawnPoint : waypoints[0];
-
-                balloon.SetActive(false);
-
-                Rigidbody rb = balloon.GetComponent<Rigidbody>();
-                if (rb != null)
-                {
-                    rb.velocity = Vector3.zero;
-                    rb.angularVelocity = Vector3.zero;
-                    rb.position = startTransform.position;
-                }
-
-                balloon.transform.position = startTransform.position;
-                balloon.transform.rotation = balloonInitialRotation;
-                lockedPosition = startTransform.position;
-
-                prevLockX = false;
-                prevLockY = false;
-                prevLockZ = false;
-
-                balloon.SetActive(true);
-            }
-
-            if (spikes != null)
-            {
-                foreach (var spike in spikes)
-                {
-                    if (spike != null)
-                    {
-                        spike.StartMoving();
-                    }
-                }
-            }
+            ResetPositions();
         }
 
         private void CompleteMinigame()
@@ -286,7 +269,7 @@ namespace Minigame
 
             if (spikes != null)
                 foreach (var spike in spikes)
-                    spike?.StopMoving();
+                    if (spike != null) spike.StopMoving();
 
             if (anxietySystem != null)
                 anxietySystem.RemoveAnxiety(anxietyReductionAmount);

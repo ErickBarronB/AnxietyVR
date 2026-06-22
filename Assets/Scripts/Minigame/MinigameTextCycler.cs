@@ -8,20 +8,19 @@ namespace Minigame
         [Header("Referencias")]
         [SerializeField] private ChaseCubeMinigame minigame;
         [SerializeField] private TMP_Text uiText;
+        [SerializeField] private TMP_Text countdownText;
 
-        [Header("Pila / Lista de Palabras")]
-        [SerializeField] private string[] words = { "Respira profundamente...", "Siente tu cuerpo...", "Suelta la tensión...", "Mantén el enfoque...", "Todo está bien...", "Estás a salvo..." };
+        [Header("Textos de Fases (Tramo 1-4)")]
+        [SerializeField] private string[] segmentTexts = { "Inhalá", "Mantené", "Exhalá", "Mantené" };
+        [SerializeField] private float segmentDuration = 4f;
+
+        [Header("Textos de Estado")]
         [SerializeField] private string inactiveText = "Presiona iniciar para calmar tu mente";
         [SerializeField] private string completionText = "¡Excelente trabajo!";
-
-        [Header("Tiempos")]
-        [SerializeField] private float wordDuration = 2.0f;
 
         [SerializeField] private System_PlayerAnxiety anxiety;
         [SerializeField] private float calmDuration = 7f;
 
-        private int currentWordIndex = -1;
-        private float timer = 0f;
         private bool isCompleted = false;
 
         private void Start()
@@ -43,63 +42,52 @@ namespace Minigame
                 Debug.LogError("[MinigameTextCycler] No se encontro ChaseCubeMinigame.");
             }
 
-            ShowInactiveText();
+            ShowInactiveState();
         }
 
         private void Update()
         {
-            if (minigame == null || !minigame.IsMinigameActive) return;
+            if (minigame == null || !minigame.IsMinigameActive || isCompleted) return;
 
-            timer += Time.deltaTime;
-            if (timer >= wordDuration)
-            {
-                timer = 0f;
-                ShowNextWord();
-            }
+            int segmentIndex = minigame.CurrentSegmentIndex % segmentTexts.Length;
+            if (uiText != null)
+                uiText.text = segmentTexts[segmentIndex];
+
+            float elapsed = minigame.SegmentTimer;
+            int countdown = Mathf.Clamp(Mathf.CeilToInt(segmentDuration - elapsed), 1, (int)segmentDuration);
+            if (countdownText != null)
+                countdownText.text = countdown.ToString();
         }
 
-        private void OnWaypointReached(int waypointIndex)
-        {
-            // Optional: react to balloon reaching a waypoint
-        }
+        private void OnWaypointReached(int waypointIndex) { }
 
         private void OnMinigameStarted()
         {
             isCompleted = false;
-            currentWordIndex = 0;
-            timer = 0f;
-
-            if (words != null && words.Length > 0)
-                ShowWord(words[0]);
+            if (uiText != null && segmentTexts != null && segmentTexts.Length > 0)
+                uiText.text = segmentTexts[0];
+            if (countdownText != null)
+                countdownText.text = ((int)segmentDuration).ToString();
         }
 
         private void OnMinigameCompleted()
         {
             isCompleted = true;
-            ShowWord(completionText);
+            if (uiText != null)
+                uiText.text = completionText;
+            if (countdownText != null)
+                countdownText.text = "";
 
             if (anxiety != null)
                 anxiety.TriggerCalm(calmDuration);
         }
 
-        private void ShowNextWord()
-        {
-            if (words == null || words.Length == 0) return;
-
-            currentWordIndex = (currentWordIndex + 1) % words.Length;
-            ShowWord(words[currentWordIndex]);
-        }
-
-        private void ShowWord(string word)
-        {
-            if (uiText != null)
-                uiText.text = word;
-        }
-
-        private void ShowInactiveText()
+        private void ShowInactiveState()
         {
             if (uiText != null)
                 uiText.text = isCompleted ? completionText : inactiveText;
+            if (countdownText != null)
+                countdownText.text = "";
         }
     }
 }
