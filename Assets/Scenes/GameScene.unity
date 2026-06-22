@@ -846,7 +846,7 @@ MonoBehaviour:
   onMinigameCompleted:
     m_PersistentCalls:
       m_Calls: []
-  anxietySystem: {fileID: 0}
+  anxietySystem: {fileID: 1018192895}
 --- !u!4 &57272646
 Transform:
   m_ObjectHideFlags: 0
@@ -8782,7 +8782,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 6d39b5558286e6740bfeffd364618df3, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.521
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -9113,7 +9113,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   category: 2
   capacity: 3
-  countLabel: {fileID: 753451774}
+  countLabel: {fileID: 1690254979}
 --- !u!65 &1166878687
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -12276,7 +12276,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 86d50f83fbf7ebe4f8e004fa4343a57b, type: 3}
-  m_PlayOnAwake: 0
+  m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
   Loop: 1
@@ -12351,7 +12351,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -15406,7 +15406,8 @@ MonoBehaviour:
   lockYAxis: 0
   lockZAxis: 0
   waypointThreshold: 0.05
-  lapAnxietyReduction: 20
+  anxietySystem: {fileID: 0}
+  anxietyReductionOnComplete: 25
   lapsRequired: 4
   startButton: {fileID: 488644205}
   startOnStart: 0

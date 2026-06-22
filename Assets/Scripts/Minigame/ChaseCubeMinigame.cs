@@ -27,7 +27,8 @@ namespace Minigame
         [SerializeField] private float waypointThreshold = 0.5f;
 
         [Header("Sistema de Ansiedad")]
-        [SerializeField] private float lapAnxietyReduction = 20f;
+        [SerializeField] private System_PlayerAnxiety anxietySystem;
+        [SerializeField] private float anxietyReductionOnComplete = 25f;
 
         [Header("Sistema de Vueltas")]
         [SerializeField] private int lapsRequired = 4;
@@ -42,8 +43,8 @@ namespace Minigame
         public WaypointReachedEvent onWaypointReached;
         public WaypointReachedEvent onLapCompleted;
 
-        private System_PlayerAnxiety anxietySystem;
         private bool minigameActive = false;
+        private bool completed = false;
         private int currentWaypointIndex = 0;
         private int currentLap = 0;
         private float segmentTimer = 0f;
@@ -71,7 +72,8 @@ namespace Minigame
 
         private void Start()
         {
-            anxietySystem = FindObjectOfType<System_PlayerAnxiety>();
+            if (anxietySystem == null)
+                anxietySystem = FindObjectOfType<System_PlayerAnxiety>();
 
             if (balloon != null)
             {
@@ -208,9 +210,6 @@ namespace Minigame
             currentLap++;
             onLapCompleted?.Invoke(currentLap);
 
-            if (anxietySystem != null)
-                anxietySystem.RemoveAnxiety(lapAnxietyReduction);
-
             if (currentLap >= lapsRequired)
                 CompleteMinigame();
         }
@@ -261,6 +260,7 @@ namespace Minigame
 
             currentLap = 0;
             minigameActive = true;
+            completed = false;
 
             if (startButton != null)
                 startButton.SetActive(false);
@@ -290,12 +290,22 @@ namespace Minigame
 
         private void CompleteMinigame()
         {
+            if (completed) return;
+            completed = true;
             minigameActive = false;
 
             if (spikes != null)
                 foreach (var spike in spikes)
-                    if (spike != null) spike.StopMoving();
+                    if (spike != null)
+                    {
+                        spike.StopMoving();
+                        spike.gameObject.SetActive(false);
+                    }
 
+            if (balloon != null)
+                balloon.SetActive(false);
+
+            anxietySystem?.RemoveAnxiety(anxietyReductionOnComplete);
             onMinigameCompleted?.Invoke();
         }
 

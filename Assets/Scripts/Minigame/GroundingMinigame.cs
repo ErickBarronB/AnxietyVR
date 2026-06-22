@@ -50,6 +50,8 @@ public class GroundingMinigame : MonoBehaviour
     {
         if (anxietySystem == null)
             anxietySystem = FindObjectOfType<System_PlayerAnxiety>();
+        if (audioSource == null)
+            audioSource = GetComponent<AudioSource>();
     }
 
     public void StartMinigame()
