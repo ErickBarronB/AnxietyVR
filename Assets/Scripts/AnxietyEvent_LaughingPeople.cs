@@ -10,7 +10,9 @@ public class AnxietyEvent_LaughingPeople : MonoBehaviour
     [SerializeField] private AudioClip laughingClip;
     [SerializeField] private AudioClip thoughtClip;
 
-    [SerializeField] private int triggerAmount = 1;
+    [Header("Ansiedad")]
+    [SerializeField] private float anxietyRatePerSecond = 5f;
+    [SerializeField] private float maxAnxietyGain = 50f;
     [SerializeField] private bool triggerOnlyOnce = true;
 
     private bool triggered;
@@ -30,16 +32,32 @@ public class AnxietyEvent_LaughingPeople : MonoBehaviour
 
     private IEnumerator EventRoutine()
     {
-        anxiety.AddAnxietyTrigger(triggerAmount);
+        float totalAdded = 0f;
 
         audioSource.PlayOneShot(laughingClip);
-
-        yield return new WaitForSeconds(laughingClip.length);
+        float elapsed = 0f;
+        while (elapsed < laughingClip.length)
+        {
+            totalAdded = AddGradual(totalAdded);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
 
         audioSource.PlayOneShot(thoughtClip);
+        elapsed = 0f;
+        while (elapsed < thoughtClip.length)
+        {
+            totalAdded = AddGradual(totalAdded);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+    }
 
-        yield return new WaitForSeconds(thoughtClip.length);
-
-        anxiety.RemoveAnxietyTrigger(triggerAmount);
+    private float AddGradual(float totalAdded)
+    {
+        if (totalAdded >= maxAnxietyGain) return totalAdded;
+        float toAdd = Mathf.Min(anxietyRatePerSecond * Time.deltaTime, maxAnxietyGain - totalAdded);
+        anxiety.AddAnxiety(toAdd);
+        return totalAdded + toAdd;
     }
 }
