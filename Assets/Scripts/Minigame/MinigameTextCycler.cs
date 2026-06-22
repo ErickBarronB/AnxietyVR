@@ -16,7 +16,7 @@ namespace Minigame
 
         [Header("Textos de Estado")]
         [SerializeField] private string inactiveText = "Presiona iniciar para calmar tu mente";
-        [SerializeField] private string completionText = "¡Excelente trabajo!";
+        [SerializeField] private string completionText = "¡Vamos, lo lograste!";
 
         [SerializeField] private System_PlayerAnxiety anxiety;
         [SerializeField] private float calmDuration = 7f;

@@ -3,7 +3,7 @@ using UnityEngine.Events;
 
 namespace Minigame
 {
-    public class ChaseCubeMinigame : MonoBehaviour
+    public class ChaseCubeMinigame : MonoBehaviour, Iinteractable
     {
         [System.Serializable]
         public class WaypointReachedEvent : UnityEvent<int> { }
@@ -27,12 +27,13 @@ namespace Minigame
         [SerializeField] private float waypointThreshold = 0.5f;
 
         [Header("Sistema de Ansiedad")]
-        [SerializeField] private float anxietyReductionAmount = 30f;
+        [SerializeField] private float lapAnxietyReduction = 20f;
 
         [Header("Sistema de Vueltas")]
         [SerializeField] private int lapsRequired = 4;
 
-        [Header("Bucle y Flujo de Juego")]
+        [Header("Inicio")]
+        [SerializeField] private GameObject startButton;
         [SerializeField] private bool startOnStart = false;
 
         [Header("Eventos de Unity")]
@@ -97,7 +98,20 @@ namespace Minigame
                     if (spike != null)
                         spike.onHitBalloon.AddListener(ResetBalloon);
 
+            if (startButton != null)
+            {
+                var triggerZone = startButton.GetComponent<Base_TriggerZone>();
+                if (triggerZone != null)
+                    triggerZone.AddInteractable(gameObject);
+            }
+
             if (startOnStart)
+                StartMinigame();
+        }
+
+        public void Interact(GameObject instigator)
+        {
+            if (!minigameActive)
                 StartMinigame();
         }
 
@@ -194,6 +208,9 @@ namespace Minigame
             currentLap++;
             onLapCompleted?.Invoke(currentLap);
 
+            if (anxietySystem != null)
+                anxietySystem.RemoveAnxiety(lapAnxietyReduction);
+
             if (currentLap >= lapsRequired)
                 CompleteMinigame();
         }
@@ -245,6 +262,9 @@ namespace Minigame
             currentLap = 0;
             minigameActive = true;
 
+            if (startButton != null)
+                startButton.SetActive(false);
+
             ResetPositions();
             gameObject.SetActive(true);
 
@@ -275,9 +295,6 @@ namespace Minigame
             if (spikes != null)
                 foreach (var spike in spikes)
                     if (spike != null) spike.StopMoving();
-
-            if (anxietySystem != null)
-                anxietySystem.RemoveAnxiety(anxietyReductionAmount);
 
             onMinigameCompleted?.Invoke();
         }

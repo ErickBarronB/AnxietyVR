@@ -45,4 +45,10 @@ public class Base_TriggerZone : MonoBehaviour, Iinteractable
             }
         }
     }
+
+    public void AddInteractable(GameObject go)
+    {
+        if (go != null && !interactablesToTrigger.Contains(go))
+            interactablesToTrigger.Add(go);
+    }
 }
