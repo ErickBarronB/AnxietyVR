@@ -24,6 +24,8 @@ public class WorldSpaceDialogueSystem : MonoBehaviour
     [SerializeField] private GameObject textPrefab;
     [HideInInspector] public float typingSpeed = 0.05f;
     public float readingDelay = 2f;
+    [Tooltip("TamaÃ±o de fuente en espacio mundo (VR: ~0.1 a 0.3)")]
+    public float defaultFontSize = 0.15f;
 
     private TextMeshPro dialogueTextComponent;
     private GameObject dialogueObject;
@@ -54,11 +56,12 @@ public class WorldSpaceDialogueSystem : MonoBehaviour
             dialogueObject = new GameObject("WorldSpaceDialogueText");
             dialogueTextComponent = dialogueObject.AddComponent<TextMeshPro>();
             dialogueTextComponent.alignment = TextAlignmentOptions.Center;
-            dialogueTextComponent.fontSize = 5;
             dialogueTextComponent.color = Color.white;
             RectTransform rect = dialogueTextComponent.GetComponent<RectTransform>();
-            rect.sizeDelta = new Vector2(10, 5);
+            rect.sizeDelta = new Vector2(2, 1);
         }
+
+        dialogueTextComponent.fontSize = defaultFontSize;
 
         dialogueObject.transform.SetParent(transform);
         dialogueTextComponent.fontMaterial = new Material(dialogueTextComponent.fontMaterial);
@@ -157,11 +160,11 @@ public class WorldSpaceDialogueSystem : MonoBehaviour
             Camera cam = Camera.main;
             if (cam != null)
             {
-                // Mirar a la cámara
+                // Mirar a la cï¿½mara
                 dialogueObject.transform.rotation =
                     Quaternion.LookRotation(dialogueObject.transform.position - cam.transform.position);
 
-                // Si hay una pared entre la cámara y el texto...
+                // Si hay una pared entre la cï¿½mara y el texto...
                 Vector3 dir = targetPosition - cam.transform.position;
 
                 if (Physics.Raycast(cam.transform.position, dir.normalized,

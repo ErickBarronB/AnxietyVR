@@ -1051,9 +1051,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   anxiety: {fileID: 1018192895}
   audioSource: {fileID: 262173183}
-  laughingClip: {fileID: 8300000, guid: 43fa9b599a7fea94ba125125d5b6727f, type: 3}
-  thoughtClip: {fileID: 8300000, guid: 00bff6e65d77ee34fa5713796ff92cbb, type: 3}
-  triggerAmount: 1
+  laughingClip: {fileID: 8300000, guid: 88ae38ff962e97a4fafbb1177926734c, type: 3}
+  thoughtClip: {fileID: 8300000, guid: b82af2327b9743d46b19ea837f69e4e1, type: 3}
+  anxietyRatePerSecond: 5
+  maxAnxietyGain: 50
   triggerOnlyOnce: 1
 --- !u!65 &262173185
 BoxCollider:
@@ -1107,7 +1108,7 @@ GameObject:
   - component: {fileID: 268767879}
   - component: {fileID: 268767878}
   m_Layer: 7
-  m_Name: '[BuildingBlock] Cube'
+  m_Name: '[BuildingBlock] Globo'
   m_TagString: Balloon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1182,8 +1183,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.02886188, y: 0.03, z: 0.0523978}
+  m_Center: {x: 0.00023903327, y: 5.563231e-10, z: -0.0043983785}
 --- !u!23 &268767881
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1204,7 +1205,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 15b1d5ff3d274694e8d0c6cb466a4ae6, type: 2}
+  - {fileID: 2100000, guid: 6498b18c1a36856418c0f74feac88469, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1233,7 +1234,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 268767877}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: -1407623660032272785, guid: a260287dd71f3ae49ae23a761cf7cf05, type: 3}
 --- !u!114 &268767883
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1260,15 +1261,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 268767877}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -35.829105, y: 7.9058, z: -1.9670752}
-  m_LocalScale: {x: 13.613324, y: 22.01604, z: 23.047466}
+  m_LocalScale: {x: 371.00198, y: 600, z: 600}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 123744}
   - {fileID: 33971539}
   m_Father: {fileID: 1834278906}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!1 &277570511
 GameObject:
   m_ObjectHideFlags: 0
@@ -3134,7 +3135,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: da467d28c2712214ab9a4e0a8181bd61, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 6d39b5558286e6740bfeffd364618df3, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -5211,13 +5212,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1818563358}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
+  m_LocalRotation: {x: -0.5, y: -0.5, z: -0.5, w: 0.5}
   m_LocalPosition: {x: -52.78544, y: 7.4518757, z: -0.037815016}
-  m_LocalScale: {x: 18.434874, y: 18.434877, z: 10.15192}
+  m_LocalScale: {x: 600, y: 350, z: 1000}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1834278906}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: -90, z: 0}
 --- !u!114 &1818563360
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5274,8 +5275,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.02999995, y: 0.02135256, z: 0.021293726}
+  m_Center: {x: -1.7412631e-10, y: -0.001378941, z: 0.00009170131}
 --- !u!23 &1818563362
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -5296,7 +5297,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 6498b18c1a36856418c0f74feac88469, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5325,7 +5326,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1818563358}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: -5495902117074765545, guid: ec4ac5a59a8b9f64d9386535d81448c7, type: 3}
 --- !u!54 &1818563364
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5382,13 +5383,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1825262308}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
+  m_LocalRotation: {x: 0.5, y: -0.5, z: 0.5, w: 0.5}
   m_LocalPosition: {x: -18.414488, y: 7.4518757, z: -0.037810504}
-  m_LocalScale: {x: 18.434874, y: 18.434877, z: 10.15192}
+  m_LocalScale: {x: 600, y: 350, z: 1000}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1834278906}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: -90, z: 0}
 --- !u!114 &1825262310
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5445,8 +5446,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.02999995, y: 0.019822491, z: 0.021574901}
+  m_Center: {x: 5.360063e-11, y: -0.0004244741, z: -0.0000022513022}
 --- !u!23 &1825262312
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -5467,7 +5468,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 6498b18c1a36856418c0f74feac88469, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5496,7 +5497,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1825262308}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: -5495902117074765545, guid: ec4ac5a59a8b9f64d9386535d81448c7, type: 3}
 --- !u!54 &1825262314
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -9019,7 +9020,7 @@ SceneRoots:
   - {fileID: 1581091822362209795}
   - {fileID: 2124792690}
   - {fileID: 1144964709}
-  - {fileID: 543450652974898251}
   - {fileID: 560994048}
   - {fileID: 262173186}
   - {fileID: 1208968312}
+  - {fileID: 543450652974898251}

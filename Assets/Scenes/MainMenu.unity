@@ -154,6 +154,7 @@ MonoBehaviour:
   textPrefab: {fileID: 0}
   typingSpeed: 0.05
   readingDelay: 2
+  defaultFontSize: 0.3
 --- !u!4 &264465797
 Transform:
   m_ObjectHideFlags: 0
@@ -557,7 +558,7 @@ MonoBehaviour:
     typingSpeed: 0.05
   delayAfterDialogue: 3
   audioSource: {fileID: 1439056032}
-  dialogueAudio: {fileID: 8300000, guid: af0b7c8633ecd2245beec363ac81ba38, type: 3}
+  dialogueAudio: {fileID: 8300000, guid: f47e3f9ef1980da42b5d2a9383380303, type: 3}
 --- !u!114 &1439056030
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -967,7 +968,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: b559047ec36dc304592503e855bb6acf, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
