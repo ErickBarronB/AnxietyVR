@@ -66,6 +66,22 @@ namespace Minigame
             active = false;
         }
 
+        public bool IsActive => active;
+        public Transform[] GetWaypoints() => waypoints;
+
+        public Vector3 GetMovementDirection()
+        {
+            if (!active || waypoints == null || waypoints.Length < 2) return Vector3.zero;
+
+            int nextIndex = currentIndex;
+            int prevIndex = (currentIndex - 1 + waypoints.Length) % waypoints.Length;
+            if (waypoints[nextIndex] != null && waypoints[prevIndex] != null)
+            {
+                return (waypoints[nextIndex].position - waypoints[prevIndex].position).normalized;
+            }
+            return (waypoints[1].position - waypoints[0].position).normalized;
+        }
+
         private void OnTriggerEnter(Collider other)
         {
             if (!active) return;

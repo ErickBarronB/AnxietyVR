@@ -43,6 +43,10 @@ namespace Minigame
         private Vector3 lockedPosition;
         private float lastResetTime = -1f;
 
+        private bool prevLockX = false;
+        private bool prevLockY = false;
+        private bool prevLockZ = false;
+
         public bool IsMinigameActive => minigameActive;
         public int CurrentWaypointIndex => currentWaypointIndex;
 
@@ -91,11 +95,62 @@ namespace Minigame
         {
             if (!minigameActive || balloon == null) return;
 
-            Vector3 pos = balloon.transform.position;
+            UpdateAxisLocksBasedOnSpikes();
+
+            Vector3 currentPos = balloon.transform.position;
+            
+            if (lockXAxis && !prevLockX) lockedPosition.x = currentPos.x;
+            if (lockYAxis && !prevLockY) lockedPosition.y = currentPos.y;
+            if (lockZAxis && !prevLockZ) lockedPosition.z = currentPos.z;
+
+            prevLockX = lockXAxis;
+            prevLockY = lockYAxis;
+            prevLockZ = lockZAxis;
+
+            Vector3 pos = currentPos;
             if (lockXAxis) pos.x = lockedPosition.x;
             if (lockYAxis) pos.y = lockedPosition.y;
             if (lockZAxis) pos.z = lockedPosition.z;
             balloon.transform.position = pos;
+        }
+
+        private void UpdateAxisLocksBasedOnSpikes()
+        {
+            if (spikes == null || spikes.Length == 0) return;
+
+            foreach (var spike in spikes)
+            {
+                if (spike == null || !spike.IsActive) continue;
+
+                Vector3 direction = spike.GetMovementDirection();
+                if (direction == Vector3.zero) continue;
+
+                float absX = Mathf.Abs(direction.x);
+                float absY = Mathf.Abs(direction.y);
+                float absZ = Mathf.Abs(direction.z);
+
+                if (absX > absY && absX > absZ)
+                {
+                    lockXAxis = false;
+                    lockYAxis = true;
+                    lockZAxis = true;
+                    return;
+                }
+                else if (absZ > absX && absZ > absY)
+                {
+                    lockXAxis = true;
+                    lockYAxis = true;
+                    lockZAxis = false;
+                    return;
+                }
+                else if (absY > absX && absY > absZ)
+                {
+                    lockXAxis = true;
+                    lockYAxis = false;
+                    lockZAxis = true;
+                    return;
+                }
+            }
         }
 
         private void CheckBalloonWaypointProximity()
@@ -131,6 +186,8 @@ namespace Minigame
             {
                 Transform startTransform = spawnPoint != null ? spawnPoint : waypoints[0];
                 
+                balloon.SetActive(false);
+
                 Rigidbody rb = balloon.GetComponent<Rigidbody>();
                 if (rb != null)
                 {
@@ -142,6 +199,11 @@ namespace Minigame
                 balloon.transform.position = startTransform.position;
                 balloon.transform.rotation = startTransform.rotation;
                 lockedPosition = startTransform.position;
+
+                prevLockX = false;
+                prevLockY = false;
+                prevLockZ = false;
+
                 balloon.SetActive(true);
             }
 
@@ -176,6 +238,8 @@ namespace Minigame
             {
                 Transform startTransform = spawnPoint != null ? spawnPoint : waypoints[0];
 
+                balloon.SetActive(false);
+
                 Rigidbody rb = balloon.GetComponent<Rigidbody>();
                 if (rb != null)
                 {
@@ -187,6 +251,12 @@ namespace Minigame
                 balloon.transform.position = startTransform.position;
                 balloon.transform.rotation = startTransform.rotation;
                 lockedPosition = startTransform.position;
+
+                prevLockX = false;
+                prevLockY = false;
+                prevLockZ = false;
+
+                balloon.SetActive(true);
             }
 
             if (spikes != null)
