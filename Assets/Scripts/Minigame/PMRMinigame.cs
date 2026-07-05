@@ -37,7 +37,7 @@ namespace Minigame
         [SerializeField] private TMP_Text instructionText;
         [SerializeField] private TMP_Text timerText;
         [SerializeField] private TMP_Text roundText;
-        [Tooltip("Panel raíz de la UI diegética (para activar/desactivar)")]
+        [Tooltip("Panel UI diegética (para activar/desactivar)")]
         [SerializeField] private GameObject uiPanel;
 
         [Header("Inicio")]
@@ -244,10 +244,8 @@ namespace Minigame
 
         private bool ReadGrips()
         {
-            bool leftHeld  = OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger,  OVRInput.Controller.LTouch) >= gripThreshold
-                          && OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, OVRInput.Controller.LTouch) >= gripThreshold;
-            bool rightHeld = OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger,  OVRInput.Controller.RTouch) >= gripThreshold
-                          && OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, OVRInput.Controller.RTouch) >= gripThreshold;
+            bool leftHeld  = OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger,  OVRInput.Controller.LTouch) >= gripThreshold && OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, OVRInput.Controller.LTouch) >= gripThreshold;
+            bool rightHeld = OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger,  OVRInput.Controller.RTouch) >= gripThreshold && OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, OVRInput.Controller.RTouch) >= gripThreshold;
             return leftHeld && rightHeld;
         }
 

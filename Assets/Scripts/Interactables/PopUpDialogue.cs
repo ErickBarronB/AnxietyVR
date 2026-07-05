@@ -25,7 +25,6 @@ public class PopUpDialogue : MonoBehaviour, Iinteractable
 
         Vector3 spawnPosition = mainCamera.transform.position + forward * desiredDistance;
 
-        // PlayDialogue first (resets parent internally), THEN reparent
         WorldSpaceDialogueSystem.Instance.PlayDialogue(dialogueLines, spawnPosition, fontSize);
 
         if (parentToInstigator)

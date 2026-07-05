@@ -20,7 +20,6 @@ public class GroundingBox : MonoBehaviour
         RefreshLabel();
     }
 
-    // Detecta si el objeto físicamente entra al trigger de la caja
     private void OnTriggerEnter(Collider other)
     {
         GroundingObject obj = other.GetComponent<GroundingObject>();

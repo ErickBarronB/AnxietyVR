@@ -103,7 +103,6 @@ public class GroundingMinigame : MonoBehaviour
 
         active = false;
 
-        // Destruir objetos que quedaron sin depositar (por seguridad)
         activeObjects.RemoveAll(o => o == null);
         foreach (var obj in activeObjects)
             if (obj != null) Destroy(obj.gameObject);
@@ -133,7 +132,7 @@ public class GroundingMinigame : MonoBehaviour
         right.y = 0;
         right.Normalize();
 
-        // Grid 5 columnas x 3 filas
+        // Grid 5 columnas x 3 filas (para los objetos)
         const int cols = 5;
         for (int i = 0; i < queue.Count; i++)
         {
@@ -142,10 +141,7 @@ public class GroundingMinigame : MonoBehaviour
             float x = (col - (cols - 1) * 0.5f) * xSpacing;
             float y = -row * ySpacing + heightOffset;
 
-            Vector3 pos = cam.transform.position
-                + forward * spawnDistance
-                + right * x
-                + Vector3.up * y;
+            Vector3 pos = cam.transform.position + forward * spawnDistance + right * x + Vector3.up * y;
 
             var (prefab, cat) = queue[i];
             if (prefab == null) continue;

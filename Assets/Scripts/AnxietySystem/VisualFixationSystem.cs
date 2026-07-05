@@ -45,7 +45,7 @@ public class VisualFixationSystem : MonoBehaviour
             npcPool.DecayWeights(weightDecayRate * Time.deltaTime, 1f);
         }
 
-        PerformRaycast();
+        //PerformRaycast();
     }
 
     private void PerformRaycast()

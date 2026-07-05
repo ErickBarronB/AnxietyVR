@@ -19,11 +19,7 @@ public class HeartbeatAudio : MonoBehaviour
     {
         if (anxietySystem == null || audioSource == null) return;
 
-        float t = Mathf.InverseLerp(
-            anxietySystem.GetMinAnxiety(),
-            anxietySystem.GetMaxAnxiety(),
-            anxietySystem.GetAnxiety()
-        );
+        float t = Mathf.InverseLerp(anxietySystem.GetMinAnxiety(), anxietySystem.GetMaxAnxiety(), anxietySystem.GetAnxiety());
 
         audioSource.volume = Mathf.Lerp(minVolume, maxVolume, t);
     }

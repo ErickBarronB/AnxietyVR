@@ -18,7 +18,6 @@ public class GroundingObject : MonoBehaviour
         minigame = game;
         category = cat;
 
-        // Flotar en el lugar hasta que el jugador lo agarre
         var rb = GetComponent<Rigidbody>();
         if (rb != null)
         {
@@ -50,7 +49,6 @@ public class GroundingObject : MonoBehaviour
     {
         if (done) return;
 
-        // Verificar si soltamos cerca de una caja
         Collider[] cols = Physics.OverlapSphere(transform.position, 0.4f, ~0, QueryTriggerInteraction.Collide);
         foreach (var col in cols)
         {
@@ -62,8 +60,6 @@ public class GroundingObject : MonoBehaviour
             }
         }
 
-        // No cerca de ninguna caja: re-congelar el frame siguiente
-        // (el SDK puede aplicar velocidad de throw después de este evento)
         StartCoroutine(FreezeNextFrame());
     }
 
@@ -80,7 +76,6 @@ public class GroundingObject : MonoBehaviour
         }
     }
 
-    // Llamado por OnReleased o por GroundingBox.OnTriggerEnter
     public void DepositIntoBox(GroundingBox box)
     {
         if (done) return;

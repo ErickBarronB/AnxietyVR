@@ -2756,8 +2756,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.02886188, y: 0.03, z: 0.0523978}
-  m_Center: {x: 0.00023903327, y: 5.563231e-10, z: -0.0043983785}
+  m_Size: {x: 0.02886188, y: 0.03, z: 0.035491847}
+  m_Center: {x: 0.0002390359, y: -4.5135146e-10, z: 0.004054607}
 --- !u!23 &268767881
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -3265,7 +3265,6 @@ GameObject:
   - component: {fileID: 358323602}
   - component: {fileID: 358323601}
   - component: {fileID: 358323600}
-  - component: {fileID: 358323599}
   m_Layer: 0
   m_Name: NPCManagers
   m_TagString: Untagged
@@ -3273,31 +3272,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
   m_IsActive: 1
---- !u!114 &358323599
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 358323598}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: efdd907c88904b648ad706d3515ce174, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::VisualFixationSystem
-  vrCamera: {fileID: 0}
-  anxietySystem: {fileID: 1018192895}
-  npcPool: {fileID: 358323601}
-  npcLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  rayDistance: 15
-  rayRadius: 1.5
-  weightIncreaseRate: 5
-  maxWeight: 20
-  weightDecayRate: 1
-  showDebugs: 1
-  currentlyObservedNPC: None
 --- !u!114 &358323600
 MonoBehaviour:
   m_ObjectHideFlags: 0

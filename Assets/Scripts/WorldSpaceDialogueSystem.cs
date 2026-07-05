@@ -65,7 +65,6 @@ public class WorldSpaceDialogueSystem : MonoBehaviour
 
         dialogueObject.transform.SetParent(transform);
         dialogueTextComponent.fontMaterial = new Material(dialogueTextComponent.fontMaterial);
-        //dialogueTextComponent.fontMaterial.shader = Shader.Find("TextMeshPro/Distance Field Overlay");
         SetRenderActive(false);
     }
 
@@ -75,7 +74,6 @@ public class WorldSpaceDialogueSystem : MonoBehaviour
             dialogueTextComponent.enabled = isActive;
     }
 
-    // --- String overloads (backwards compatible) ---
     public void PlayDialogue(List<string> linesToDisplay, Vector3 position)
     {
         PlayDialogue(ToDialogueLines(linesToDisplay, typingSpeed), position);
@@ -87,14 +85,12 @@ public class WorldSpaceDialogueSystem : MonoBehaviour
         PlayDialogue(ToDialogueLines(linesToDisplay, typingSpeed), position);
     }
 
-    // --- DialogueLine overloads ---
     public void PlayDialogue(List<DialogueLine> linesToDisplay, Vector3 position)
     {
         if (linesToDisplay == null || linesToDisplay.Count == 0) return;
 
         if (typingCoroutine != null) StopCoroutine(typingCoroutine);
 
-        // Reset parent before positioning so world position is always correct
         targetPosition = position;
 
         dialogueObject.transform.SetParent(transform);
@@ -133,7 +129,7 @@ public class WorldSpaceDialogueSystem : MonoBehaviour
         {
             SetRenderActive(false);
             dialogueTextComponent.text = string.Empty;
-            dialogueObject.transform.SetParent(transform); // reset parent back to manager
+            dialogueObject.transform.SetParent(transform); 
         }
     }
 
@@ -160,17 +156,14 @@ public class WorldSpaceDialogueSystem : MonoBehaviour
             Camera cam = Camera.main;
             if (cam != null)
             {
-                // Mirar a la c�mara
                 dialogueObject.transform.rotation =
                     Quaternion.LookRotation(dialogueObject.transform.position - cam.transform.position);
 
-                // Si hay una pared entre la c�mara y el texto...
                 Vector3 dir = targetPosition - cam.transform.position;
 
                 if (Physics.Raycast(cam.transform.position, dir.normalized,
                     out RaycastHit hit, dir.magnitude))
                 {
-                    // Si algo tapa el texto
                     if (hit.distance < dir.magnitude - 0.05f)
                     {
                         dialogueObject.transform.position =

@@ -55,27 +55,13 @@ public class FadeManager : MonoBehaviour
         while (elapsed < fadeDuration)
         {
             elapsed += Time.deltaTime;
-            float alpha = Mathf.Lerp(
-                startAlpha,
-                endAlpha,
-                elapsed / fadeDuration
-            );
+            float alpha = Mathf.Lerp(startAlpha, endAlpha, elapsed / fadeDuration);
 
-            fadeImage.color = new Color(
-                color.r,
-                color.g,
-                color.b,
-                alpha
-            );
+            fadeImage.color = new Color(color.r, color.g, color.b,alpha);
 
             yield return null;
         }
 
-        fadeImage.color = new Color(
-            color.r,
-            color.g,
-            color.b,
-            endAlpha
-        );
+        fadeImage.color = new Color(color.r, color.g, color.b, endAlpha);
     }
 }
