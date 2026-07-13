@@ -203,13 +203,13 @@ namespace Minigame
         private void AdvanceWaypoint()
         {
             int reached = currentWaypointIndex;
-            bool wasLastWaypoint = reached == waypoints.Length - 1;
+            bool completedLap = reached == 0;
 
             segmentTimer = 0f;
             currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Length;
             onWaypointReached?.Invoke(reached);
 
-            if (wasLastWaypoint)
+            if (completedLap)
                 HandleLapCompleted();
         }
 
@@ -225,6 +225,7 @@ namespace Minigame
         private void ResetPositions()
         {
             currentWaypointIndex = 1;
+            currentLap = 0;
             segmentTimer = 0f;
             lastResetTime = Time.time;
 
@@ -266,7 +267,6 @@ namespace Minigame
                 return;
             }
 
-            currentLap = 0;
             minigameActive = true;
             completed = false;
 
