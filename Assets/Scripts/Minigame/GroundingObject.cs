@@ -9,14 +9,22 @@ public class GroundingObject : MonoBehaviour
     private GroundingMinigame minigame;
     private Grabbable grabbable;
     private bool done;
+    private GameObject originalPrefab;
+
+    private Vector3 spawnPosition;
+    private Quaternion spawnRotation;
 
     public SensoryCategory Category => category;
     public bool IsDone => done;
 
-    public void Init(GroundingMinigame game, SensoryCategory cat)
+    public void Init(GroundingMinigame game, SensoryCategory cat, GameObject prefab)
     {
         minigame = game;
         category = cat;
+        originalPrefab = prefab;
+
+        spawnPosition = transform.position;
+        spawnRotation = transform.rotation;
 
         var rb = GetComponent<Rigidbody>();
         if (rb != null)
@@ -79,8 +87,23 @@ public class GroundingObject : MonoBehaviour
     public void DepositIntoBox(GroundingBox box)
     {
         if (done) return;
-        done = true;
-        box.TryDeposit(this);
-        Destroy(gameObject);
+
+        bool correct = box.TryDeposit(this);
+
+        if (correct)
+        {
+            done = true;
+            Destroy(gameObject);
+        }
+        else
+        {
+            GameObject go = Instantiate(originalPrefab, spawnPosition, spawnRotation);
+
+            GroundingObject obj = go.GetComponent<GroundingObject>();
+            obj.Init(minigame, category, originalPrefab);
+            minigame.RegisterObject(obj);
+
+            Destroy(gameObject);
+        }
     }
 }
