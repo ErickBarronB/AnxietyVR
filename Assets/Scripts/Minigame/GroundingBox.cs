@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using Oculus.Interaction;
 
 public class GroundingBox : MonoBehaviour
 {
@@ -9,22 +10,38 @@ public class GroundingBox : MonoBehaviour
 
     private GroundingMinigame minigame;
     private int count;
+    private SnapInteractable snapInteractable;
 
     public SensoryCategory Category => category;
     public bool IsFull => count >= capacity;
+    public SnapInteractable SnapInteractable => snapInteractable;
 
     public void Init(GroundingMinigame game)
     {
         minigame = game;
         count = 0;
         RefreshLabel();
+        EnsureSnapInteractable();
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void EnsureSnapInteractable()
     {
-        GroundingObject obj = other.GetComponent<GroundingObject>();
-        if (obj == null || obj.IsDone) return;
-        obj.DepositIntoBox(this);
+        if (snapInteractable != null) return;
+
+        snapInteractable = GetComponent<SnapInteractable>();
+        if (snapInteractable == null)
+        {
+            Rigidbody rb = GetComponent<Rigidbody>();
+            if (rb == null)
+            {
+                rb = gameObject.AddComponent<Rigidbody>();
+                rb.isKinematic = true;
+                rb.useGravity = false;
+            }
+
+            snapInteractable = gameObject.AddComponent<SnapInteractable>();
+            snapInteractable.InjectRigidbody(rb);
+        }
     }
 
     public bool TryDeposit(GroundingObject obj)

@@ -4,10 +4,14 @@ using Oculus.Interaction;
 
 public class GroundingObject : MonoBehaviour
 {
+    private const float SnapResolveDelay = 0.15f;
+
     [SerializeField] private SensoryCategory category;
 
     private GroundingMinigame minigame;
     private Grabbable grabbable;
+    private Rigidbody rb;
+    private SnapInteractor snapInteractor;
     private bool done;
     private GameObject originalPrefab;
 
@@ -26,7 +30,7 @@ public class GroundingObject : MonoBehaviour
         spawnPosition = transform.position;
         spawnRotation = transform.rotation;
 
-        var rb = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
         if (rb != null)
         {
             rb.isKinematic = true;
@@ -39,12 +43,33 @@ public class GroundingObject : MonoBehaviour
         grabbable = GetComponent<Grabbable>();
         if (grabbable != null)
             grabbable.WhenPointerEventRaised += OnPointerEvent;
+
+        EnsureSnapInteractor();
+    }
+
+    private void EnsureSnapInteractor()
+    {
+        if (grabbable == null) return;
+
+        if (rb == null)
+            rb = GetComponent<Rigidbody>();
+
+        snapInteractor = GetComponent<SnapInteractor>();
+        if (snapInteractor == null)
+            snapInteractor = gameObject.AddComponent<SnapInteractor>();
+
+        snapInteractor.InjectPointableElement(grabbable);
+        snapInteractor.InjectRigidbody(rb);
+        snapInteractor.WhenInteractableSelected.Action += HandleSnapSelected;
     }
 
     private void OnDestroy()
     {
         if (grabbable != null)
             grabbable.WhenPointerEventRaised -= OnPointerEvent;
+
+        if (snapInteractor != null)
+            snapInteractor.WhenInteractableSelected.Action -= HandleSnapSelected;
     }
 
     private void OnPointerEvent(PointerEvent evt)
@@ -56,26 +81,33 @@ public class GroundingObject : MonoBehaviour
     private void OnReleased()
     {
         if (done) return;
-
-        Collider[] cols = Physics.OverlapSphere(transform.position, 0.4f, ~0, QueryTriggerInteraction.Collide);
-        foreach (var col in cols)
-        {
-            GroundingBox box = col.GetComponent<GroundingBox>();
-            if (box != null)
-            {
-                DepositIntoBox(box);
-                return;
-            }
-        }
-
         StartCoroutine(FreezeNextFrame());
+    }
+
+    private void HandleSnapSelected(SnapInteractable interactable)
+    {
+        if (done || interactable == null) return;
+
+        GroundingBox box = interactable.GetComponent<GroundingBox>();
+        if (box == null) return;
+
+        StartCoroutine(ResolveDepositAfterSnap(box, interactable));
+    }
+
+    private IEnumerator ResolveDepositAfterSnap(GroundingBox box, SnapInteractable interactable)
+    {
+        yield return new WaitForSeconds(SnapResolveDelay);
+
+        if (done) yield break;
+        if (snapInteractor == null || snapInteractor.SelectedInteractable != interactable) yield break;
+
+        DepositIntoBox(box);
     }
 
     private IEnumerator FreezeNextFrame()
     {
         yield return null;
         if (done) yield break;
-        var rb = GetComponent<Rigidbody>();
         if (rb != null)
         {
             rb.velocity = Vector3.zero;
@@ -89,10 +121,10 @@ public class GroundingObject : MonoBehaviour
         if (done) return;
 
         bool correct = box.TryDeposit(this);
+        done = true;
 
         if (correct)
         {
-            done = true;
             Destroy(gameObject);
         }
         else
