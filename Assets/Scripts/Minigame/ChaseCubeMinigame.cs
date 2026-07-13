@@ -31,7 +31,7 @@ namespace Minigame
         [SerializeField] private float anxietyReductionOnComplete = 25f;
 
         [Header("Sistema de Vueltas")]
-        [SerializeField] private int lapsRequired = 4;
+        [SerializeField] private int lapsRequired = 2;
 
         [Header("Inicio")]
         [SerializeField] private GameObject startButton;
