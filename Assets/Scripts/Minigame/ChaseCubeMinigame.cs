@@ -294,6 +294,9 @@ namespace Minigame
             completed = true;
             minigameActive = false;
 
+            if (anxietySystem != null)
+                anxietySystem.RemoveAnxiety(anxietyReductionOnComplete);
+
             if (spikes != null)
                 foreach (var spike in spikes)
                     if (spike != null)
@@ -305,7 +308,6 @@ namespace Minigame
             if (balloon != null)
                 balloon.SetActive(false);
 
-            anxietySystem?.RemoveAnxiety(anxietyReductionOnComplete);
             onMinigameCompleted?.Invoke();
         }
 

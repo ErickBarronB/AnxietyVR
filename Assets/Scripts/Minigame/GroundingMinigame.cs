@@ -40,7 +40,6 @@ public class GroundingMinigame : MonoBehaviour
 
     private bool active;
     private int correctCount;
-    private int processedCount;
     private int totalObjects;
     private readonly List<GroundingObject> activeObjects = new List<GroundingObject>();
 
@@ -59,7 +58,6 @@ public class GroundingMinigame : MonoBehaviour
         if (active) return;
 
         correctCount = 0;
-        processedCount = 0;
         activeObjects.Clear();
 
         vistaBox.Init(this);
@@ -68,55 +66,57 @@ public class GroundingMinigame : MonoBehaviour
         olfatoBox.Init(this);
         gustoBox.Init(this);
 
+
         var queue = BuildSpawnQueue();
         totalObjects = queue.Count;
         SpawnAllObjects(queue);
 
         active = true;
+        PlaySound(correctSound);
         onMinigameStarted?.Invoke();
     }
 
     public void OnCorrectDeposit()
     {
         correctCount++;
-        processedCount++;
         PlaySound(correctSound);
         CheckEnd();
     }
 
     public void OnWrongDeposit()
     {
-        processedCount++;
         PlaySound(wrongSound);
-        CheckEnd();
     }
 
     private void PlaySound(AudioClip clip)
     {
+        Debug.Log($"PlaySound: {clip}");
+
         if (audioSource != null && clip != null)
             audioSource.PlayOneShot(clip);
     }
 
     private void CheckEnd()
     {
-        if (!active || processedCount < totalObjects) return;
+        if (!active) return;
+
+        if (correctCount < totalObjects)
+            return;
+
+        if (anxietySystem != null)
+            anxietySystem.RemoveAnxiety(anxietyReductionOnComplete);
 
         active = false;
 
         activeObjects.RemoveAll(o => o == null);
+
         foreach (var obj in activeObjects)
-            if (obj != null) Destroy(obj.gameObject);
+            if (obj != null)
+                Destroy(obj.gameObject);
+
         activeObjects.Clear();
 
-        if (correctCount >= totalObjects)
-        {
-            anxietySystem?.RemoveAnxiety(anxietyReductionOnComplete);
-            onMinigameCompleted?.Invoke();
-        }
-        else
-        {
-            onMinigameFailed?.Invoke();
-        }
+        onMinigameCompleted?.Invoke();
     }
 
     private void SpawnAllObjects(List<(GameObject prefab, SensoryCategory cat)> queue)
@@ -150,9 +150,14 @@ public class GroundingMinigame : MonoBehaviour
 
             GroundingObject obj = go.GetComponent<GroundingObject>();
             if (obj == null) obj = go.AddComponent<GroundingObject>();
-            obj.Init(this, cat);
+            obj.Init(this, cat, prefab);
             activeObjects.Add(obj);
         }
+    }
+
+    public void RegisterObject(GroundingObject obj)
+    {
+        activeObjects.Add(obj);
     }
 
     private List<(GameObject, SensoryCategory)> BuildSpawnQueue()

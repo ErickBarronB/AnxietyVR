@@ -826,7 +826,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gripThreshold: 0.7
-  totalRounds: 4
+  totalRounds: 3
   tenseHoldDuration: 5
   releaseDuration: 10
   restBetweenRounds: 2
@@ -2506,7 +2506,7 @@ GameObject:
   - component: {fileID: 262173184}
   - component: {fileID: 262173183}
   m_Layer: 0
-  m_Name: AddAnxiety1
+  m_Name: AddAnxiety (risas)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10096,7 +10096,7 @@ GameObject:
   - component: {fileID: 1285766709}
   m_Layer: 0
   m_Name: Spike4
-  m_TagString: Untagged
+  m_TagString: Spike
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11397,7 +11397,7 @@ GameObject:
   - component: {fileID: 1488917120}
   m_Layer: 0
   m_Name: Spike3
-  m_TagString: Untagged
+  m_TagString: Spike
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14869,7 +14869,7 @@ GameObject:
   - component: {fileID: 1818563364}
   m_Layer: 0
   m_Name: Spike1
-  m_TagString: Untagged
+  m_TagString: Spike
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15042,7 +15042,7 @@ GameObject:
   - component: {fileID: 1825262314}
   m_Layer: 0
   m_Name: Spike2
-  m_TagString: Untagged
+  m_TagString: Spike
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15368,7 +15368,6 @@ MonoBehaviour:
   - {fileID: 1182016117}
   - {fileID: 1353180709}
   - {fileID: 671118156}
-  - {fileID: 181676886}
   spawnPoint: {fileID: 181676886}
   balloon: {fileID: 268767877}
   spikes:
@@ -15380,9 +15379,9 @@ MonoBehaviour:
   lockYAxis: 0
   lockZAxis: 0
   waypointThreshold: 0.05
-  anxietySystem: {fileID: 0}
+  anxietySystem: {fileID: 1018192895}
   anxietyReductionOnComplete: 25
-  lapsRequired: 4
+  lapsRequired: 2
   startButton: {fileID: 488644205}
   startOnStart: 0
   onMinigameStarted:

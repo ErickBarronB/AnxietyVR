@@ -7,6 +7,7 @@ TagManager:
   - MinigameTarget
   - Hand
   - Balloon
+  - Spike
   layers:
   - Default
   - TransparentFX
