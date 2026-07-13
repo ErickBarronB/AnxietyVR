@@ -60,7 +60,19 @@ public class GroundingObject : MonoBehaviour
 
         snapInteractor.InjectPointableElement(grabbable);
         snapInteractor.InjectRigidbody(rb);
+        snapInteractor.SetComputeCandidateOverride(ComputeMatchingBoxCandidate, false);
         snapInteractor.WhenInteractableSelected.Action += HandleSnapSelected;
+    }
+
+    private SnapInteractable ComputeMatchingBoxCandidate()
+    {
+        foreach (SnapInteractable candidate in SnapInteractable.Registry.List(snapInteractor))
+        {
+            GroundingBox box = candidate.GetComponent<GroundingBox>();
+            if (box != null && box.Category == category)
+                return candidate;
+        }
+        return null;
     }
 
     private void OnDestroy()
@@ -81,7 +93,26 @@ public class GroundingObject : MonoBehaviour
     private void OnReleased()
     {
         if (done) return;
+
+        GroundingBox nearbyBox = FindNearbyBox();
+        if (nearbyBox != null && nearbyBox.Category != category)
+        {
+            DepositIntoBox(nearbyBox);
+            return;
+        }
+
         StartCoroutine(FreezeNextFrame());
+    }
+
+    private GroundingBox FindNearbyBox()
+    {
+        Collider[] cols = Physics.OverlapSphere(transform.position, 0.4f, ~0, QueryTriggerInteraction.Collide);
+        foreach (var col in cols)
+        {
+            GroundingBox box = col.GetComponent<GroundingBox>();
+            if (box != null) return box;
+        }
+        return null;
     }
 
     private void HandleSnapSelected(SnapInteractable interactable)
