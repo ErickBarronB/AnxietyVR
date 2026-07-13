@@ -6,6 +6,7 @@ namespace Minigame
     public class BalloonCollisionDetector : MonoBehaviour
     {
         public Action OnHitSpike;
+        public Action<Collider> OnReachWaypoint;
 
         [Header("Sonido de Explosión")]
         [SerializeField] private AudioClip popSound;
@@ -17,6 +18,10 @@ namespace Minigame
             {
                 PlayPopSound();
                 OnHitSpike?.Invoke();
+            }
+            else if (other.CompareTag("WayPoint"))
+            {
+                OnReachWaypoint?.Invoke(other);
             }
         }
 

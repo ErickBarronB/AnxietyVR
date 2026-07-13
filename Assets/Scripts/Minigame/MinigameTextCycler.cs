@@ -12,7 +12,7 @@ namespace Minigame
 
         [Header("Textos de Fases (Tramo 1-4)")]
         [SerializeField] private string[] segmentTexts = { "Inhalá", "Mantené", "Exhalá", "Mantené" };
-        [SerializeField] private float segmentDuration = 4f;
+        [SerializeField] private float segmentDuration = 2.5f;
 
         [Header("Textos de Estado")]
         [SerializeField] private string inactiveText = "Presiona iniciar para calmar tu mente";

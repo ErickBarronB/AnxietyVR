@@ -23,9 +23,6 @@ namespace Minigame
         [SerializeField] private bool lockYAxis = false;
         [SerializeField] private bool lockZAxis = false;
 
-        [Header("Detección de Waypoints del Globo")]
-        [SerializeField] private float waypointThreshold = 0.5f;
-
         [Header("Sistema de Ansiedad")]
         [SerializeField] private System_PlayerAnxiety anxietySystem;
         [SerializeField] private float anxietyReductionOnComplete = 25f;
@@ -55,6 +52,8 @@ namespace Minigame
         private bool prevLockX = false;
         private bool prevLockY = false;
         private bool prevLockZ = false;
+
+        private BalloonCollisionDetector balloonDetector;
 
         public bool IsMinigameActive => minigameActive;
         public int CurrentWaypointIndex => currentWaypointIndex;
@@ -89,10 +88,11 @@ namespace Minigame
 
             if (balloon != null)
             {
-                var detector = balloon.GetComponent<BalloonCollisionDetector>();
-                if (detector == null)
-                    detector = balloon.AddComponent<BalloonCollisionDetector>();
-                detector.OnHitSpike = ResetBalloon;
+                balloonDetector = balloon.GetComponent<BalloonCollisionDetector>();
+                if (balloonDetector == null)
+                    balloonDetector = balloon.AddComponent<BalloonCollisionDetector>();
+                balloonDetector.OnHitSpike = ResetBalloon;
+                balloonDetector.OnReachWaypoint += HandleWaypointTrigger;
             }
 
             if (spikes != null)
@@ -117,11 +117,16 @@ namespace Minigame
                 StartMinigame();
         }
 
+        private void OnDestroy()
+        {
+            if (balloonDetector != null)
+                balloonDetector.OnReachWaypoint -= HandleWaypointTrigger;
+        }
+
         private void Update()
         {
             if (!minigameActive) return;
             segmentTimer += Time.deltaTime;
-            CheckBalloonWaypointProximity();
         }
 
         private void LateUpdate()
@@ -184,25 +189,28 @@ namespace Minigame
             }
         }
 
-        private void CheckBalloonWaypointProximity()
+        private void HandleWaypointTrigger(Collider other)
         {
-            if (balloon == null || waypoints == null || waypoints.Length == 0) return;
+            if (!minigameActive || waypoints == null || waypoints.Length == 0) return;
 
             Transform target = waypoints[currentWaypointIndex];
             if (target == null) return;
+            if (other.transform != target && !other.transform.IsChildOf(target)) return;
 
-            if (Vector3.Distance(balloon.transform.position, target.position) < waypointThreshold)
-            {
-                int reached = currentWaypointIndex;
-                bool wasLastWaypoint = reached == waypoints.Length - 1;
+            AdvanceWaypoint();
+        }
 
-                segmentTimer = 0f;
-                currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Length;
-                onWaypointReached?.Invoke(reached);
+        private void AdvanceWaypoint()
+        {
+            int reached = currentWaypointIndex;
+            bool wasLastWaypoint = reached == waypoints.Length - 1;
 
-                if (wasLastWaypoint)
-                    HandleLapCompleted();
-            }
+            segmentTimer = 0f;
+            currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Length;
+            onWaypointReached?.Invoke(reached);
+
+            if (wasLastWaypoint)
+                HandleLapCompleted();
         }
 
         private void HandleLapCompleted()

@@ -8,6 +8,8 @@ TagManager:
   - Hand
   - Balloon
   - Spike
+  - wayPoint
+  - WayPoint
   layers:
   - Default
   - TransparentFX
