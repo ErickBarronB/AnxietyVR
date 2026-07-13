@@ -69,12 +69,7 @@ public class FPSCounter : MonoBehaviour
         if (cam == null) return;
 
         Transform camT = cam.transform;
-        transform.SetPositionAndRotation(
-            camT.position
-                + camT.forward * DistanceFromCamera
-                + camT.up * VerticalOffset
-                + camT.right * HorizontalOffset,
-            camT.rotation);
+        transform.SetPositionAndRotation(camT.position + camT.forward * DistanceFromCamera + camT.up * VerticalOffset + camT.right * HorizontalOffset, camT.rotation);
     }
 
     private void UpdateCounter()
@@ -86,9 +81,7 @@ public class FPSCounter : MonoBehaviour
         float fps = ComputeFps();
         float referenceFps = ReferenceFramerate();
 
-        label.color = fps >= referenceFps * 0.9f ? Color.green
-            : fps >= referenceFps * 0.6f ? Color.yellow
-            : Color.red;
+        label.color = fps >= referenceFps * 0.9f ? Color.green: fps >= referenceFps * 0.6f ? Color.yellow : Color.red;
 
         sb.Clear();
         sb.Append((int)fps).Append(" FPS");
@@ -109,8 +102,8 @@ public class FPSCounter : MonoBehaviour
     private float ReferenceFramerate()
     {
         if (OVRManager.display != null && OVRManager.display.displayFrequency > 0f)
-            return OVRManager.display.displayFrequency;
+            return OVRManager.display.displayFrequency = 90;
 
-        return 72f;
+        return 90f;
     }
 }

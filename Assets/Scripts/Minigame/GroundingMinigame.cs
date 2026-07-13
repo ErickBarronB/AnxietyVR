@@ -19,10 +19,13 @@ public class GroundingMinigame : MonoBehaviour
     [SerializeField] private GroundingBox gustoBox;
 
     [Header("Layout (grid en frente del jugador)")]
+    [SerializeField] private Transform spawnOrigin;
     [SerializeField] private float spawnDistance = 2.5f;
     [SerializeField] private float xSpacing = 0.45f;
     [SerializeField] private float ySpacing = 0.4f;
     [SerializeField] private float heightOffset = 0.1f;
+    [SerializeField] private int columns = 5;
+    [SerializeField] private bool centerRowsVertically = true;
 
     [Header("Sonidos")]
     [SerializeField] private AudioSource audioSource;
@@ -119,29 +122,74 @@ public class GroundingMinigame : MonoBehaviour
         onMinigameCompleted?.Invoke();
     }
 
-    private void SpawnAllObjects(List<(GameObject prefab, SensoryCategory cat)> queue)
+    private bool TryGetGridBasis(out Vector3 basePosition, out Vector3 forward, out Vector3 right)
     {
-        Camera cam = Camera.main;
-        if (cam == null) return;
+        if (spawnOrigin != null)
+        {
+            basePosition = spawnOrigin.position;
+            forward = spawnOrigin.forward;
+            forward.y = 0f;
+            if (forward.sqrMagnitude < 0.0001f) forward = Vector3.forward;
+            forward.Normalize();
 
-        Vector3 forward = cam.transform.forward;
+            right = spawnOrigin.right;
+            right.y = 0f;
+            if (right.sqrMagnitude < 0.0001f) right = Vector3.right;
+            right.Normalize();
+            return true;
+        }
+
+        Camera cam = Camera.main;
+        if (cam == null)
+        {
+            basePosition = Vector3.zero;
+            forward = Vector3.forward;
+            right = Vector3.right;
+            return false;
+        }
+
+        basePosition = cam.transform.position;
+
+        forward = cam.transform.forward;
         forward.y = 0;
         forward.Normalize();
 
-        Vector3 right = cam.transform.right;
+        right = cam.transform.right;
         right.y = 0;
         right.Normalize();
+        return true;
+    }
 
-        // Grid 5 columnas x 3 filas (para los objetos)
-        const int cols = 5;
+    private Vector3 GetGridPosition(int index, int count, Vector3 basePosition, Vector3 forward, Vector3 right)
+    {
+        int cols = Mathf.Max(1, columns);
+        int col = index % cols;
+        int row = index / cols;
+
+        float x = (col - (cols - 1) * 0.5f) * xSpacing;
+
+        float y;
+        if (centerRowsVertically)
+        {
+            int totalRows = Mathf.Max(1, Mathf.CeilToInt((float)count / cols));
+            y = -(row - (totalRows - 1) * 0.5f) * ySpacing + heightOffset;
+        }
+        else
+        {
+            y = -row * ySpacing + heightOffset;
+        }
+
+        return basePosition + forward * spawnDistance + right * x + Vector3.up * y;
+    }
+
+    private void SpawnAllObjects(List<(GameObject prefab, SensoryCategory cat)> queue)
+    {
+        if (!TryGetGridBasis(out Vector3 basePosition, out Vector3 forward, out Vector3 right))
+            return;
+
         for (int i = 0; i < queue.Count; i++)
         {
-            int col = i % cols;
-            int row = i / cols;
-            float x = (col - (cols - 1) * 0.5f) * xSpacing;
-            float y = -row * ySpacing + heightOffset;
-
-            Vector3 pos = cam.transform.position + forward * spawnDistance + right * x + Vector3.up * y;
+            Vector3 pos = GetGridPosition(i, queue.Count, basePosition, forward, right);
 
             var (prefab, cat) = queue[i];
             if (prefab == null) continue;
@@ -163,11 +211,11 @@ public class GroundingMinigame : MonoBehaviour
     private List<(GameObject, SensoryCategory)> BuildSpawnQueue()
     {
         var list = new List<(GameObject, SensoryCategory)>();
-        AddObjects(list, vistaPrefabs,  SensoryCategory.Vista);
-        AddObjects(list, tactoPrefabs,  SensoryCategory.Tacto);
-        AddObjects(list, oidoPrefabs,   SensoryCategory.Oido);
+        AddObjects(list, vistaPrefabs, SensoryCategory.Vista);
+        AddObjects(list, tactoPrefabs, SensoryCategory.Tacto);
+        AddObjects(list, oidoPrefabs, SensoryCategory.Oido);
         AddObjects(list, olfatoPrefabs, SensoryCategory.Olfato);
-        AddObjects(list, gustoPrefabs,  SensoryCategory.Gusto);
+        AddObjects(list, gustoPrefabs, SensoryCategory.Gusto);
 
         for (int i = list.Count - 1; i > 0; i--)
         {
@@ -183,4 +231,40 @@ public class GroundingMinigame : MonoBehaviour
         foreach (var prefab in prefabs)
             if (prefab != null) list.Add((prefab, cat));
     }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        if (!TryGetGridBasis(out Vector3 basePosition, out Vector3 forward, out Vector3 right))
+            return;
+
+        int count = CountConfigured(vistaPrefabs) + CountConfigured(tactoPrefabs) + CountConfigured(oidoPrefabs) + CountConfigured(olfatoPrefabs) + CountConfigured(gustoPrefabs);
+
+        if (count <= 0) count = 1; 
+
+        for (int i = 0; i < count; i++)
+        {
+            Vector3 pos = GetGridPosition(i, count, basePosition, forward, right);
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawWireSphere(pos, 0.08f);
+            UnityEditor.Handles.Label(pos + Vector3.up * 0.12f, i.ToString());
+        }
+
+        if (spawnOrigin != null)
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawSphere(spawnOrigin.position, 0.05f);
+            Gizmos.DrawLine(spawnOrigin.position, spawnOrigin.position + forward * spawnDistance);
+        }
+    }
+
+    private int CountConfigured(GameObject[] prefabs)
+    {
+        if (prefabs == null) return 0;
+        int c = 0;
+        foreach (var p in prefabs)
+            if (p != null) c++;
+        return c;
+    }
+#endif
 }
