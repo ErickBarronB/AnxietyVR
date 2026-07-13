@@ -10,10 +10,6 @@ public class AnxietyVignette : MonoBehaviour
     [SerializeField] private float minAlpha = 0f;
     [SerializeField] private float maxAlpha = 0.9f;
 
-    [Header("Rango de ansiedad (debe coincidir con System_PlayerAnxiety)")]
-    [SerializeField] private float anxietyMin = 60f;
-    [SerializeField] private float anxietyMax = 180f;
-
     [Header("Velocidad de transición")]
     [SerializeField] private float lerpSpeed = 2f;
 
@@ -29,7 +25,7 @@ public class AnxietyVignette : MonoBehaviour
     {
         if (anxietySystem == null || vignetteImage == null) return;
 
-        float t = Mathf.InverseLerp(anxietyMin, anxietyMax, anxietySystem.GetAnxiety());
+        float t = Mathf.InverseLerp(anxietySystem.GetMinAnxiety(), anxietySystem.GetMaxAnxiety(), anxietySystem.GetAnxiety());
         float targetAlpha = Mathf.Lerp(minAlpha, maxAlpha, t);
 
         Color c = vignetteImage.color;
