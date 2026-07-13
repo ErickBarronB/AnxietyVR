@@ -1,11 +1,21 @@
 fileFormatVersion: 2
-guid: cef838c6ca7b0e84fb2cb8922a7ec9a7
+guid: b5213e444712cf14cb7452a8ab3d2a93
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Sign
+    second: {fileID: 2100000, guid: ae0e3750520bff84cac342e28a460d7d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: atlas.001
+    second: {fileID: 2100000, guid: 8f659002565be18488df5a0125c87bd1, type: 2}
   materials:
-    materialImportMode: 2
+    materialImportMode: 0
     materialName: 0
     materialSearch: 1
     materialLocation: 1
