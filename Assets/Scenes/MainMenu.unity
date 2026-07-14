@@ -625,7 +625,7 @@ MonoBehaviour:
     typingSpeed: 0.05
   delayAfterDialogue: 3
   audioSource: {fileID: 1439056032}
-  dialogueAudio: {fileID: 8300000, guid: f47e3f9ef1980da42b5d2a9383380303, type: 3}
+  dialogueAudio: {fileID: 8300000, guid: 3af3b4ce0c58d5343942f053916b8d1b, type: 3}
 --- !u!114 &1439056030
 MonoBehaviour:
   m_ObjectHideFlags: 0
