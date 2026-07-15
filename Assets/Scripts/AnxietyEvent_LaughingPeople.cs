@@ -32,6 +32,9 @@ public class AnxietyEvent_LaughingPeople : MonoBehaviour
 
         StartCoroutine(EventRoutine());
 
+        if (miniGame == null)
+            return;
+
         miniGame.SetActive(true);
     }
 
@@ -39,22 +42,28 @@ public class AnxietyEvent_LaughingPeople : MonoBehaviour
     {
         float totalAdded = 0f;
 
-        audioSource.PlayOneShot(laughingClip);
-        float elapsed = 0f;
-        while (elapsed < laughingClip.length)
+        if (laughingClip != null)
         {
-            totalAdded = AddGradual(totalAdded);
-            elapsed += Time.deltaTime;
-            yield return null;
+            audioSource.PlayOneShot(laughingClip);
+            float elapsed = 0f;
+            while (elapsed < laughingClip.length)
+            {
+                totalAdded = AddGradual(totalAdded);
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
         }
 
-        audioSource.PlayOneShot(thoughtClip);
-        elapsed = 0f;
-        while (elapsed < thoughtClip.length)
+        if (thoughtClip != null)
         {
-            totalAdded = AddGradual(totalAdded);
-            elapsed += Time.deltaTime;
-            yield return null;
+            audioSource.PlayOneShot(thoughtClip);
+            float elapsed = 0f;
+            while (elapsed < thoughtClip.length)
+            {
+                totalAdded = AddGradual(totalAdded);
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
         }
     }
 

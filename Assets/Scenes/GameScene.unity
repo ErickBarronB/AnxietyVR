@@ -12011,9 +12011,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1909566283}
   - component: {fileID: 1909566282}
-  - component: {fileID: 1909566281}
   - component: {fileID: 1909566280}
-  - component: {fileID: 1909566279}
+  - component: {fileID: 1909566284}
   m_Layer: 0
   m_Name: StartAudioTrigger
   m_TagString: Untagged
@@ -12021,19 +12020,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
   m_IsActive: 1
---- !u!114 &1909566279
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1909566278}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2140d2b457bea84881488302059889b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _collider: {fileID: 1909566282}
 --- !u!82 &1909566280
 AudioSource:
   m_ObjectHideFlags: 0
@@ -12044,7 +12030,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: ac08db29a7dc23243bd297935926be94, type: 3}
+  m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -12130,20 +12116,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &1909566281
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1909566278}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d893df7c7e8351544b6fcb8a968947df, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  audioSource: {fileID: 1909566280}
-  playerTag: Player
 --- !u!65 &1909566282
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -12159,7 +12131,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -12180,6 +12152,26 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1909566284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1909566278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e45aca45e91b1947bec7d2af40fa508, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anxiety: {fileID: 1018192895}
+  audioSource: {fileID: 1909566280}
+  laughingClip: {fileID: 8300000, guid: ac08db29a7dc23243bd297935926be94, type: 3}
+  thoughtClip: {fileID: 0}
+  miniGame: {fileID: 0}
+  anxietyRatePerSecond: 0
+  maxAnxietyGain: 0
+  triggerOnlyOnce: 1
 --- !u!1 &1920858344
 GameObject:
   m_ObjectHideFlags: 0
@@ -16708,12 +16700,12 @@ SceneRoots:
   - {fileID: 2124792690}
   - {fileID: 1144964709}
   - {fileID: 560994048}
+  - {fileID: 1909566283}
   - {fileID: 262173186}
   - {fileID: 1391967316}
   - {fileID: 1947224928}
   - {fileID: 1208968312}
   - {fileID: 1770418632}
-  - {fileID: 1909566283}
   - {fileID: 193340447}
   - {fileID: 1166878679}
   - {fileID: 1606146586}
