@@ -42,6 +42,10 @@ namespace Minigame
         public WaypointReachedEvent onWaypointReached;
         public WaypointReachedEvent onLapCompleted;
 
+        [Header("SFX")]
+        [SerializeField] private AudioSource audioSource;
+        [SerializeField] private AudioClip afterBreathingSound;
+
         private bool minigameActive = false;
         private bool completed = false;
         private int currentWaypointIndex = 0;
@@ -298,6 +302,14 @@ namespace Minigame
             ResetPositions();
         }
 
+        private void PlaySound(AudioClip clip)
+        {
+            Debug.Log($"PlaySound: {clip}");
+
+            if (audioSource != null && clip != null)
+                audioSource.PlayOneShot(clip);
+        }
+
         private void CompleteMinigame()
         {
             if (completed) return;
@@ -319,6 +331,7 @@ namespace Minigame
                 balloon.SetActive(false);
 
             finalManager.MinigameIndex++;
+            PlaySound(afterBreathingSound);
 
             onMinigameCompleted?.Invoke();
         }

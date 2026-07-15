@@ -537,6 +537,8 @@ MonoBehaviour:
       m_Calls: []
   finalManager: {fileID: 193340448}
   anxietySystem: {fileID: 1018192895}
+  audioSource: {fileID: 1947224925}
+  afterPMRSound: {fileID: 8300000, guid: b8d0769b2fe9e1e44a6124faef36fa9e, type: 3}
 --- !u!4 &57272646
 Transform:
   m_ObjectHideFlags: 0
@@ -3898,6 +3900,7 @@ MonoBehaviour:
   audioSource: {fileID: 574559339}
   correctSound: {fileID: 8300000, guid: ff9b2a37bb05e1643b3221ff3a4fc40f, type: 3}
   wrongSound: {fileID: 8300000, guid: 7a94461c609180f49b17d8b959eed1df, type: 3}
+  afterGroundingSound: {fileID: 8300000, guid: 7e1458a3ad3630c4cb3a0357c0a61023, type: 3}
   anxietySystem: {fileID: 1018192895}
   anxietyReductionOnComplete: 25
   onMinigameStarted:
@@ -11806,6 +11809,8 @@ MonoBehaviour:
   onLapCompleted:
     m_PersistentCalls:
       m_Calls: []
+  audioSource: {fileID: 262173183}
+  afterBreathingSound: {fileID: 8300000, guid: cc75264008e025f47ba2fd458a64d17a, type: 3}
 --- !u!114 &1834278913
 MonoBehaviour:
   m_ObjectHideFlags: 0

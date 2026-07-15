@@ -31,6 +31,7 @@ public class GroundingMinigame : MonoBehaviour
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip correctSound;
     [SerializeField] private AudioClip wrongSound;
+    [SerializeField] private AudioClip afterGroundingSound;
 
 
     [Header("Ansiedad")]
@@ -122,6 +123,8 @@ public class GroundingMinigame : MonoBehaviour
         activeObjects.Clear();
 
         finalManager.MinigameIndex++;
+        PlaySound(afterGroundingSound);
+
 
         onMinigameCompleted?.Invoke();
     }

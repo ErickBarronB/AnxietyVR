@@ -58,6 +58,10 @@ namespace Minigame
         [SerializeField] private System_PlayerAnxiety anxietySystem;
         private Coroutine activeCoroutine;
 
+        [Header("SFX")]
+        [SerializeField] private AudioSource audioSource;
+        [SerializeField] private AudioClip afterPMRSound;
+
         private void Awake()
         {
             if (anxietySystem == null)
@@ -197,6 +201,14 @@ namespace Minigame
             }
         }
 
+        private void PlaySound(AudioClip clip)
+        {
+            Debug.Log($"PlaySound: {clip}");
+
+            if (audioSource != null && clip != null)
+                audioSource.PlayOneShot(clip);
+        }
+
         private void CompleteMinigame()
         {
             if (anxietySystem != null)
@@ -210,6 +222,7 @@ namespace Minigame
             if (activeCoroutine != null) StopCoroutine(activeCoroutine);
 
             finalManager.MinigameIndex++;
+            PlaySound(afterPMRSound);
 
             activeCoroutine = StartCoroutine(HideUIDelayed(4f));
         }
