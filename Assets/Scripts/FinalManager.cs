@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class FinalManager : MonoBehaviour
@@ -7,6 +8,9 @@ public class FinalManager : MonoBehaviour
     [SerializeField] private List<DialogueLine> dialogueLines = new List<DialogueLine>();
     [SerializeField] private float delayAfterDialogue = 1.5f;
     [SerializeField] private Transform TextPosition;
+    [SerializeField] private TMP_Text minigamesText;
+    [SerializeField] private int minigameIndex = 0;
+    [SerializeField] private int totalMinigamesRequired = 3;
 
     [Header("Audio")]
     [SerializeField] private AudioSource audioSource;
@@ -14,8 +18,24 @@ public class FinalManager : MonoBehaviour
 
     private bool hasBeenTriggered = false;
 
+    public int MinigameIndex { get => minigameIndex; set { minigameIndex = value; UpdateMinigamesText(); } }
+
+    private void Start()
+    {
+        UpdateMinigamesText();
+    }
+
+    private void UpdateMinigamesText()
+    {
+        if (minigamesText != null)
+            minigamesText.text = $"{minigameIndex} / {totalMinigamesRequired}";
+    }
+
     public void Load()
     {
+        if (MinigameIndex < totalMinigamesRequired)
+            return;
+
         if (hasBeenTriggered) return;
         hasBeenTriggered = true;
 
@@ -23,21 +43,6 @@ public class FinalManager : MonoBehaviour
         {
             audioSource.clip = dialogueAudio;
             audioSource.Play();
-        }
-
-      
-
-        if (WorldSpaceDialogueSystem.Instance == null)
-        {
-            Debug.LogError("FinalManager: WorldSpaceDialogueSystem.Instance es null. " +
-                "Asegurate de arrancar desde la escena MainMenu (ahi vive el singleton) o de colocarlo tambien en GameScene.", this);
-            return;
-        }
-
-        if (TextPosition == null)
-        {
-            Debug.LogError("FinalManager: TextPosition no esta asignado en el Inspector.", this);
-            return;
         }
 
         WorldSpaceDialogueSystem.Instance.PlayDialogue(dialogueLines, TextPosition.position);

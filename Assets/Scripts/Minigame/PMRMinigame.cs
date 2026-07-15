@@ -48,6 +48,7 @@ namespace Minigame
         public UnityEvent onRoundCompleted;
         public UnityEvent onMinigameCompleted;
 
+        [SerializeField] private FinalManager finalManager;
         private PMRState state = PMRState.Idle;
         private int currentRound = 0;
         private float stateTimer = 0f;
@@ -207,6 +208,9 @@ namespace Minigame
             onMinigameCompleted?.Invoke();
 
             if (activeCoroutine != null) StopCoroutine(activeCoroutine);
+
+            finalManager.MinigameIndex++;
+
             activeCoroutine = StartCoroutine(HideUIDelayed(4f));
         }
 

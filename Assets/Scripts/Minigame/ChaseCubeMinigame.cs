@@ -34,6 +34,8 @@ namespace Minigame
         [SerializeField] private GameObject startButton;
         [SerializeField] private bool startOnStart = false;
 
+        [SerializeField] private FinalManager finalManager;
+
         [Header("Eventos de Unity")]
         public UnityEvent onMinigameStarted;
         public UnityEvent onMinigameCompleted;
@@ -315,6 +317,8 @@ namespace Minigame
 
             if (balloon != null)
                 balloon.SetActive(false);
+
+            finalManager.MinigameIndex++;
 
             onMinigameCompleted?.Invoke();
         }

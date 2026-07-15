@@ -32,6 +32,7 @@ public class GroundingMinigame : MonoBehaviour
     [SerializeField] private AudioClip correctSound;
     [SerializeField] private AudioClip wrongSound;
 
+
     [Header("Ansiedad")]
     [SerializeField] private System_PlayerAnxiety anxietySystem;
     [SerializeField] private float anxietyReductionOnComplete = 25f;
@@ -41,6 +42,7 @@ public class GroundingMinigame : MonoBehaviour
     public UnityEvent onMinigameFailed;
     public UnityEvent onMinigameCompleted;
 
+    [SerializeField] private FinalManager finalManager;
     private bool active;
     private int correctCount;
     private int totalObjects;
@@ -118,6 +120,8 @@ public class GroundingMinigame : MonoBehaviour
                 Destroy(obj.gameObject);
 
         activeObjects.Clear();
+
+        finalManager.MinigameIndex++;
 
         onMinigameCompleted?.Invoke();
     }
