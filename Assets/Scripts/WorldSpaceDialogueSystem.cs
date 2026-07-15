@@ -34,7 +34,6 @@ public class WorldSpaceDialogueSystem : MonoBehaviour
     private List<DialogueLine> currentLines;
     private int currentLineIndex = 0;
     private bool isTyping = false;
-    private Vector3 targetPosition;
 
     private void Awake()
     {
@@ -55,7 +54,7 @@ public class WorldSpaceDialogueSystem : MonoBehaviour
         {
             dialogueObject = new GameObject("WorldSpaceDialogueText");
             dialogueTextComponent = dialogueObject.AddComponent<TextMeshPro>();
-            dialogueTextComponent.alignment = TextAlignmentOptions.Center;
+            dialogueTextComponent.alignment = TextAlignmentOptions.Left;
             dialogueTextComponent.color = Color.white;
             RectTransform rect = dialogueTextComponent.GetComponent<RectTransform>();
             rect.sizeDelta = new Vector2(2, 1);
@@ -90,8 +89,6 @@ public class WorldSpaceDialogueSystem : MonoBehaviour
         if (linesToDisplay == null || linesToDisplay.Count == 0) return;
 
         if (typingCoroutine != null) StopCoroutine(typingCoroutine);
-
-        targetPosition = position;
 
         dialogueObject.transform.SetParent(transform);
         dialogueObject.transform.position = position;
@@ -147,39 +144,6 @@ public class WorldSpaceDialogueSystem : MonoBehaviour
         isTyping = false;
         yield return new WaitForSeconds(readingDelay);
         ShowNextLine();
-    }
-
-    private void Update()
-    {
-        if (dialogueTextComponent != null && dialogueTextComponent.enabled)
-        {
-            Camera cam = Camera.main;
-            if (cam != null)
-            {
-                dialogueObject.transform.rotation =
-                    Quaternion.LookRotation(dialogueObject.transform.position - cam.transform.position);
-
-                Vector3 dir = targetPosition - cam.transform.position;
-
-                if (Physics.Raycast(cam.transform.position, dir.normalized,
-                    out RaycastHit hit, dir.magnitude))
-                {
-                    if (hit.distance < dir.magnitude - 0.05f)
-                    {
-                        dialogueObject.transform.position =
-                            cam.transform.position + dir.normalized * Mathf.Max(hit.distance - 0.2f, 0.5f);
-                    }
-                    else
-                    {
-                        dialogueObject.transform.position = targetPosition;
-                    }
-                }
-                else
-                {
-                    dialogueObject.transform.position = targetPosition;
-                }
-            }
-        }
     }
 
     public void SetParent(Transform parent)

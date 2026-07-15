@@ -1353,7 +1353,8 @@ Transform:
   m_LocalPosition: {x: 97.867, y: 1.24, z: -63.94}
   m_LocalScale: {x: 0.98711765, y: 2.1064777, z: 0.182922}
   m_ConstrainProportionsScale: 1
-  m_Children: []
+  m_Children:
+  - {fileID: 421935536}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!114 &193340448
@@ -1394,6 +1395,7 @@ MonoBehaviour:
   - line: "Porque ninguna batalla deber\xEDa librarse en soledad."
     typingSpeed: 0.05
   delayAfterDialogue: 3
+  TextPosition: {fileID: 421935536}
   audioSource: {fileID: 193340439}
   dialogueAudio: {fileID: 8300000, guid: 3672ee7d86b688b4ab60b61fff8ff367, type: 3}
 --- !u!1 &199490330
@@ -2970,6 +2972,37 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &421935535
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 421935536}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &421935536
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 421935535}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.91, y: 0, z: -0.25}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 193340447}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &443593464
 GameObject:
@@ -5369,7 +5402,7 @@ PrefabInstance:
     - target: {fileID: 1465737110440564057, guid: cb6a5e5cf51ce3142ac301f62c94097d,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -16.37
+      value: 91.43
       objectReference: {fileID: 0}
     - target: {fileID: 1465737110440564057, guid: cb6a5e5cf51ce3142ac301f62c94097d,
         type: 3}
@@ -5379,7 +5412,7 @@ PrefabInstance:
     - target: {fileID: 1465737110440564057, guid: cb6a5e5cf51ce3142ac301f62c94097d,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 36.64
+      value: -63.16
       objectReference: {fileID: 0}
     - target: {fileID: 1465737110440564057, guid: cb6a5e5cf51ce3142ac301f62c94097d,
         type: 3}

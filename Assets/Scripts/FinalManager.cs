@@ -6,6 +6,7 @@ public class FinalManager : MonoBehaviour
 {
     [SerializeField] private List<DialogueLine> dialogueLines = new List<DialogueLine>();
     [SerializeField] private float delayAfterDialogue = 1.5f;
+    [SerializeField] private Transform TextPosition;
 
     [Header("Audio")]
     [SerializeField] private AudioSource audioSource;
@@ -24,18 +25,22 @@ public class FinalManager : MonoBehaviour
             audioSource.Play();
         }
 
-        Camera mainCamera = Camera.main;
-        Vector3 forward = mainCamera.transform.forward;
-        float desiredDistance = 2f;
+      
 
-        if (Physics.Raycast(mainCamera.transform.position, forward, out RaycastHit hit, desiredDistance))
+        if (WorldSpaceDialogueSystem.Instance == null)
         {
-            desiredDistance = hit.distance - 0.1f;
+            Debug.LogError("FinalManager: WorldSpaceDialogueSystem.Instance es null. " +
+                "Asegurate de arrancar desde la escena MainMenu (ahi vive el singleton) o de colocarlo tambien en GameScene.", this);
+            return;
         }
 
-        Vector3 spawnPosition = mainCamera.transform.position + forward * desiredDistance;
+        if (TextPosition == null)
+        {
+            Debug.LogError("FinalManager: TextPosition no esta asignado en el Inspector.", this);
+            return;
+        }
 
-        WorldSpaceDialogueSystem.Instance.PlayDialogue(dialogueLines, spawnPosition);
+        WorldSpaceDialogueSystem.Instance.PlayDialogue(dialogueLines, TextPosition.position);
         StartCoroutine(WaitForDialogueThenLoad());
     }
 
